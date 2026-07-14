@@ -1,10 +1,10 @@
 /**
- * Headless solution driver — feeds a keystroke string through the pure reducer
+ * Headless solution driver - feeds a keystroke string through the pure reducer
  * and reports whether a challenge's (possibly multi-stage, ratcheted) goals are
  * cleared. The tmux analog of Vimersion's tests/driver.ts, but far simpler:
  * the engine has no DOM, so there are no jsdom shims.
  *
- * Solution string grammar (no decorative whitespace — every char counts):
+ * Solution string grammar (no decorative whitespace - every char counts):
  *   C-b      a Ctrl+key combo (the prefix)
  *   <CR>     Enter          <Esc>   Escape       <Space> space
  *   <BS>     Backspace      <Left>/<Right>/<Up>/<Down>  arrow keys

@@ -205,7 +205,7 @@ export function CampaignMode({ challenge, onPlay, onMap }: Props) {
           <div className="panel w-full max-w-md p-6 text-center">
             <p className="font-terminal text-3xl font-bold text-danger">REPELLED!</p>
             <p className="mt-2 text-sm text-ink-dim">
-              {challenge.title} shrugged off your {finalKs} keystrokes — the budget was {challenge.keystrokeBudget}. Every attempt
+              {challenge.title} shrugged off your {finalKs} keystrokes - the budget was {challenge.keystrokeBudget}. Every attempt
               teaches the pattern.
             </p>
             <div className="mt-5 flex justify-center gap-3">

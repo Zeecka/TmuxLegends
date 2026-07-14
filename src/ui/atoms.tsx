@@ -23,7 +23,7 @@ const MODE_STYLES: Record<Mode, { label: string; cls: string }> = {
   'rename-session': { label: 'RENAME', cls: 'text-magenta border-magenta/40 bg-magenta/10' },
 }
 
-/** The current tmux mode indicator — a filled pill per mode. */
+/** The current tmux mode indicator - a filled pill per mode. */
 export function ModeBadge({ mode }: { mode: Mode }) {
   const m = MODE_STYLES[mode] ?? MODE_STYLES.normal
   return (

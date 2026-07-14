@@ -3,7 +3,7 @@ import { BINDINGS, CATEGORY_ORDER, type BindingCategory } from '../tmux/catalog'
 import { MASTERY_THRESHOLD, useGame } from '../game/store'
 
 /**
- * The Binding Belt — every tmux binding the game teaches, grouped by category,
+ * The Binding Belt - every tmux binding the game teaches, grouped by category,
  * lighting up as you master it (≥ MASTERY_THRESHOLD reps). The tmux analog of
  * Vimersion's Command Belt.
  */
@@ -52,7 +52,7 @@ function CategoryRow({
           return (
             <span
               key={b.id}
-              title={`${b.label}${mastered ? ' — mastered' : reps ? ` — ${reps}/${MASTERY_THRESHOLD}` : ''}`}
+              title={`${b.label}${mastered ? ' - mastered' : reps ? ` - ${reps}/${MASTERY_THRESHOLD}` : ''}`}
               className={`inline-flex items-center gap-1.5 rounded-md border px-2 py-1 text-xs transition-colors ${
                 mastered ? 'border-term/50 bg-term/10 text-ink' : 'border-border bg-panel-2/40 text-ink-dim'
               }`}

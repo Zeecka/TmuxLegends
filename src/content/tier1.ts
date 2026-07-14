@@ -4,13 +4,13 @@ import { activePaneCmd, allOf, layoutIs, paneCount, paneZoomed, splitDirIs } fro
 import { single } from './build'
 
 // Reusable starting layouts built by driving the pure ops (correct by
-// construction — the same reducer proves the pars in tests/par.test.ts).
+// construction - the same reducer proves the pars in tests/par.test.ts).
 const vimThenSplitRight = splitActive(single({ cmd: 'vim' }), 'h') // vim (left) | shell (active, right)
 const threePanes = splitActive(splitActive(single(), 'h'), 'v') // h[.v[..]], 3 panes
 
 /**
- * Tier 1 — "Split". The prefix epiphany, then panes: % and " to split, o/arrows
- * to move, z to zoom, x to kill. This is tmux's grammar-defining idea — nothing
+ * Tier 1 - "Split". The prefix epiphany, then panes: % and " to split, o/arrows
+ * to move, z to zoom, x to kill. This is tmux's grammar-defining idea - nothing
  * happens without the prefix first.
  */
 export const tier1: Challenge[] = [
@@ -45,7 +45,7 @@ export const tier1: Challenge[] = [
     start: vimThenSplitRight,
     goal: { predicate: activePaneCmd('vim'), describe: 'The vim pane is active' },
     par: 2,
-    hint: 'Prefix then o cycles panes. (Prefix then an arrow key moves by direction — try ← too.)',
+    hint: 'Prefix then o cycles panes. (Prefix then an arrow key moves by direction - try ← too.)',
   },
   {
     id: 't1-zoom',
@@ -56,7 +56,7 @@ export const tier1: Challenge[] = [
     start: vimThenSplitRight,
     goal: { predicate: paneZoomed(), describe: 'The active pane is zoomed' },
     par: 2,
-    hint: 'Prefix then z toggles zoom. Press it again later to pop back to the split — your panes are still there.',
+    hint: 'Prefix then z toggles zoom. Press it again later to pop back to the split - your panes are still there.',
   },
   {
     id: 't1-kill',

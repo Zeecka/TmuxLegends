@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { MODIFIER_KEYS, keyFromEvent } from '../src/tmux/engine'
 
-// A minimal stand-in for a DOM KeyboardEvent (vitest runs in node — no DOM).
+// A minimal stand-in for a DOM KeyboardEvent (vitest runs in node - no DOM).
 function ev(init: {
   key: string
   ctrlKey?: boolean

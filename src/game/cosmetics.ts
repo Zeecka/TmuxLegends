@@ -1,5 +1,5 @@
 /**
- * Cosmetics — the "Customize" economy (ported from Vimersion, adapted to
+ * Cosmetics - the "Customize" economy (ported from Vimersion, adapted to
  * Tmuxpert's emoji mascot). Three kinds: an avatar (your mascot face), a theme
  * (the app-wide accent color), and a background (the animated backdrop). Free
  * items (price 0) are owned from the start; the rest are bought with coins
@@ -12,12 +12,12 @@ export interface Cosmetic {
   kind: CosmeticKind
   name: string
   price: number // 0 = free / owned by default
-  // avatar payload — an emoji name (see src/ui/emoji.ts)
+  // avatar payload - an emoji name (see src/ui/emoji.ts)
   emoji?: string
-  // theme payload — overrides the primary accent app-wide
+  // theme payload - overrides the primary accent app-wide
   accent?: string
   accentDim?: string
-  // background payload — key consumed by <Background/>
+  // background payload - key consumed by <Background/>
   bg?: string
   blurb?: string
 }
@@ -34,7 +34,7 @@ export const AVATARS: Cosmetic[] = [
   { id: 'dragon', kind: 'avatar', name: 'Dragon', price: 120, emoji: 'dragon', blurb: 'Hoards windows.' },
 ]
 
-/** Color themes — override the primary accent app-wide (UI + surface cursor). */
+/** Color themes - override the primary accent app-wide (UI + surface cursor). */
 export const THEMES: Cosmetic[] = [
   { id: 'tmux-green', kind: 'theme', name: 'tmux Green', price: 0, accent: '#3ddc84', accentDim: '#2ba86a' },
   { id: 'nightglass', kind: 'theme', name: 'Nightglass', price: 0, accent: '#7c6bff', accentDim: '#5a4cd6' },
@@ -61,7 +61,7 @@ export const COSMETIC_BY_ID: Record<string, Cosmetic> = Object.fromEntries(COSME
 
 export const DEFAULTS = { avatar: 'robot', theme: 'tmux-green', background: 'crt' } as const
 
-/** Everything free — owned from the first launch. */
+/** Everything free - owned from the first launch. */
 export const FREE_COSMETICS: string[] = COSMETICS.filter((c) => c.price === 0).map((c) => c.id)
 
 export type HeroEffect = 'sparkles' | 'fire' | 'bolt'

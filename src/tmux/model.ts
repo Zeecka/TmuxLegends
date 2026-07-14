@@ -1,11 +1,11 @@
 /**
- * Tmuxpert's tmux state model — a pure, serializable multiplexer state tree.
+ * Tmuxpert's tmux state model - a pure, serializable multiplexer state tree.
  *
  * There is no "real tmux in the browser", so this is a faithful *simulation*:
  * sessions → windows → (a binary tree of) panes. Because it's pure data with
  * no DOM, the exact same reducer (engine.ts) drives both the live surface and
  * the headless par-proving tests. This is the analog of Vimersion's editor
- * buffer — here the "buffer" is the whole pane/window/session tree.
+ * buffer - here the "buffer" is the whole pane/window/session tree.
  */
 
 /** A pane split. tmux's famously counter-intuitive naming:
@@ -233,7 +233,7 @@ export function makeState(opts?: { session?: string; window?: string; cmd?: stri
   }
 }
 
-/** Deep-clone a state (structuredClone) — the reducer is pure, so content
+/** Deep-clone a state (structuredClone) - the reducer is pure, so content
  *  files can safely reuse a shared starting-state builder. */
 export function cloneState(s: TmuxState): TmuxState {
   return structuredClone(s)

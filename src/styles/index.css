@@ -15,11 +15,11 @@
   --color-panel-2: #1a2030;
   --color-border: #2a3044;
 
-  --color-term: #3ddc84; /* tmux status-bar green — primary */
+  --color-term: #3ddc84; /* tmux status-bar green - primary */
   --color-term-dim: #2ba86a;
-  --color-amber: #ffc24b; /* accent — XP / highlights */
-  --color-cyan: #4cc9f0; /* accent — info */
-  --color-magenta: #ff6ac1; /* accent — combos */
+  --color-amber: #ffc24b; /* accent - XP / highlights */
+  --color-cyan: #4cc9f0; /* accent - info */
+  --color-magenta: #ff6ac1; /* accent - combos */
   --color-danger: #ff5c7a;
 
   --color-ink: #e2e6f0; /* main text */
@@ -86,7 +86,7 @@ body {
       inset 0 1px 0 rgba(255, 255, 255, 0.05),
       0 8px 24px -12px rgba(0, 0, 0, 0.5);
   }
-  /* Clean gradient display text (static — no shimmer). */
+  /* Clean gradient display text (static - no shimmer). */
   .title-gradient {
     background: linear-gradient(115deg, var(--color-ink) 5%, var(--color-term) 55%, var(--color-cyan));
     -webkit-background-clip: text;
@@ -119,7 +119,7 @@ body {
     transform: scale(0.98);
   }
   /* Darker, less blurred glass for the tmux surface when a scene runs behind
-     it — keeps pane contrast comfortably above WCAG AA. */
+     it - keeps pane contrast comfortably above WCAG AA. */
   .panel-glass {
     background: rgba(11, 13, 20, 0.78);
     backdrop-filter: blur(10px);

@@ -1,5 +1,5 @@
 /**
- * Tiny chiptune SFX synthesized with the Web Audio API — no audio assets required,
+ * Tiny chiptune SFX synthesized with the Web Audio API - no audio assets required,
  * works offline, and matches the retro-terminal aesthetic. All sounds are short
  * oscillator blips with a fast gain envelope. Respects a global mute flag.
  */
@@ -70,7 +70,7 @@ export const sfx = {
   star(index = 0) {
     blip([N.C5, N.E5, N.G5][index] ?? N.A5, 0.12, { type: 'sine', vol: 0.06, delay: index * 0.14 })
   },
-  /** Ascending combo pitch — higher as the combo grows. */
+  /** Ascending combo pitch - higher as the combo grows. */
   combo(step: number) {
     blip(440 + Math.min(step, 12) * 45, 0.05, { type: 'square', vol: 0.045 })
   },

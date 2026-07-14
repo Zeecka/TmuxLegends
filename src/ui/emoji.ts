@@ -1,5 +1,5 @@
 // Twemoji SVGs (jdecked/twemoji, CC-BY 4.0) bundled so glyphs render identically
-// on every system — the app must not depend on the OS having an emoji font.
+// on every system - the app must not depend on the OS having an emoji font.
 import ninja from '../assets/emoji/1f977.svg'
 import robot from '../assets/emoji/1f916.svg'
 import cat from '../assets/emoji/1f431.svg'

@@ -31,7 +31,7 @@ const DRILLS: Drill[] = [
 
 type Phase = 'ready' | 'playing' | 'over'
 
-/** Prefix Rush — a 30-second reflex drill for the prefix-then-key combos. Fire
+/** Prefix Rush - a 30-second reflex drill for the prefix-then-key combos. Fire
  *  the prefix (Ctrl-b) then the shown key as fast as you can. Analog of
  *  Vimersion's Motion Rush. */
 export function ArcadeMode() {
@@ -115,7 +115,7 @@ export function ArcadeMode() {
         return
       }
       if (!armedRef.current) {
-        // Pressed a key without arming the prefix first — a miss.
+        // Pressed a key without arming the prefix first - a miss.
         registerMiss()
         return
       }
@@ -155,7 +155,7 @@ export function ArcadeMode() {
       <div className="text-center">
         <h2 className="title-gradient font-terminal text-4xl font-bold">Prefix Rush</h2>
         <p className="mt-2 text-sm text-ink-dim">
-          {DURATION} seconds. Fire the <KeyCap>C-b</KeyCap> prefix, then the shown key — as fast as you can.
+          {DURATION} seconds. Fire the <KeyCap>C-b</KeyCap> prefix, then the shown key - as fast as you can.
         </p>
       </div>
 
@@ -204,7 +204,7 @@ export function ArcadeMode() {
               <span className="text-ink-dim">then</span>
               <KeyCap>{drill.display}</KeyCap>
             </div>
-            <p className={`text-xs ${armed ? 'text-term' : 'text-ink-dim/60'}`}>{armed ? 'prefix armed — press the key!' : 'press the prefix first'}</p>
+            <p className={`text-xs ${armed ? 'text-term' : 'text-ink-dim/60'}`}>{armed ? 'prefix armed - press the key!' : 'press the prefix first'}</p>
           </motion.div>
         </div>
       )}

@@ -1,5 +1,5 @@
 /**
- * Goal evaluation — the single source of truth shared by the live play loop
+ * Goal evaluation - the single source of truth shared by the live play loop
  * (CampaignMode) and the headless par-proving tests. A goal is met when its
  * targetLayout matches (if given) AND its predicate is true (if given); at
  * least one must be specified.

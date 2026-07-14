@@ -31,7 +31,7 @@ export default function App() {
     setSoundMuted(!soundOn)
   }, [soundOn])
 
-  // The whole UI recolors from one variable — swap the accent when a theme is
+  // The whole UI recolors from one variable - swap the accent when a theme is
   // equipped (mirrors Vimersion).
   useEffect(() => {
     const root = document.documentElement
@@ -119,7 +119,7 @@ function Home({
         <h1 className="title-gradient mt-5 font-terminal text-6xl font-bold sm:text-7xl">
           <span className="text-term">:</span>Tmuxpert
         </h1>
-        <p className="mt-2 text-ink-dim">Learn tmux by playing — real prefix-key challenges, no config to memorize.</p>
+        <p className="mt-2 text-ink-dim">Learn tmux by playing - real prefix-key challenges, no config to memorize.</p>
 
         <div className="mt-8 grid w-full grid-cols-2 gap-2.5 sm:grid-cols-5">
           {stats.map((s) => (

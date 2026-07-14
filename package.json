@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "Learn tmux by playing — a gamified, simulated-multiplexer tmux trainer.",
+  "description": "Learn tmux by playing - a gamified, simulated-multiplexer tmux trainer.",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

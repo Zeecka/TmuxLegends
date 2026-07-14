@@ -13,8 +13,8 @@ import {
 import { single, withWindows } from './build'
 
 /**
- * Tier 5 — "Command Line". Everything you've done with the prefix, tmux can also
- * do from its command prompt (prefix : ) — and that's the door to scripting and
+ * Tier 5 - "Command Line". Everything you've done with the prefix, tmux can also
+ * do from its command prompt (prefix : ) - and that's the door to scripting and
  * your ~/.tmux.conf. These teach the command form (and its short aliases).
  */
 export const tier5: Challenge[] = [
@@ -38,7 +38,7 @@ export const tier5: Challenge[] = [
     start: single({ window: 'main', cmd: 'zsh' }),
     goal: { predicate: allOf(windowCount(2), windowNamed('deploy')), describe: "A window named 'deploy' exists" },
     par: 17,
-    hint: '`neww` = new-window; `-n` sets the name in one shot — no separate rename needed.',
+    hint: '`neww` = new-window; `-n` sets the name in one shot - no separate rename needed.',
   },
   {
     id: 't5-cmd-jump',
@@ -60,7 +60,7 @@ export const tier5: Challenge[] = [
     start: withWindows([{ name: 'logs' }, { name: 'editor' }], { activeIndex: 1 }),
     goal: { predicate: allOf(activeWindowIndex(0), activeWindowNamed('editor')), describe: 'editor is now window 0' },
     par: 13,
-    hint: '`swapw -t 0` swaps the current window with window 0 — the active window rides along to its new slot.',
+    hint: '`swapw -t 0` swaps the current window with window 0 - the active window rides along to its new slot.',
   },
   {
     id: 't5-cmd-newsession',
@@ -71,7 +71,7 @@ export const tier5: Challenge[] = [
     start: single({ session: 'main' }),
     goal: { predicate: allOf(sessionCount(2), sessionNamed('staging')), describe: "A second session 'staging' exists" },
     par: 17,
-    hint: '`new` = new-session; `-s` names it. It’s created in the background — you stay where you are.',
+    hint: '`new` = new-session; `-s` names it. It’s created in the background - you stay where you are.',
   },
   {
     id: 't5-capstone',

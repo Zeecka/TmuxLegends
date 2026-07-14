@@ -38,7 +38,7 @@ export interface Challenge {
   hint: string
   /** 'boss' gets multi-stage flow, a keystroke budget & a special result screen. */
   kind?: 'standard' | 'boss'
-  /** Boss stages 2..n, checked in order after `goal` (stage 1) — same session,
+  /** Boss stages 2..n, checked in order after `goal` (stage 1) - same session,
    *  no surface remount between stages. */
   stages?: ChallengeStage[]
   /** Boss "HP bar": exceeding this many keystrokes fails the attempt
@@ -46,7 +46,7 @@ export interface Challenge {
   keystrokeBudget?: number
 }
 
-/** Normalized stage list — the ONLY way runtime code should read goals. */
+/** Normalized stage list - the ONLY way runtime code should read goals. */
 export function stagesOf(ch: Challenge): ChallengeStage[] {
   return [{ brief: ch.brief, goal: ch.goal }, ...(ch.stages ?? [])]
 }

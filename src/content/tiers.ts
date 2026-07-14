@@ -1,5 +1,5 @@
 /**
- * World/tier assembly — the master challenge registry and unlock gating.
+ * World/tier assembly - the master challenge registry and unlock gating.
  * Mirrors Vimersion's tiers.ts: WORLDS metadata + a single CHALLENGES array in
  * play order + tierUnlocked().
  */
@@ -46,7 +46,7 @@ export function challengesForTier(tier: Tier): Challenge[] {
   return CHALLENGES.filter((c) => c.tier === tier)
 }
 
-/** Standard (non-boss) challenges of a tier — these are the unlock gates. */
+/** Standard (non-boss) challenges of a tier - these are the unlock gates. */
 export function standardForTier(tier: Tier): Challenge[] {
   return challengesForTier(tier).filter((c) => c.kind !== 'boss')
 }

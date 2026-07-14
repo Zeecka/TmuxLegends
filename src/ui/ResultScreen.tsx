@@ -25,7 +25,7 @@ export function ResultScreen({ outcome, keystrokes, par, boss, hasNext, nextLabe
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // Enter advances to the next level (or next world) — no reach for the mouse.
+  // Enter advances to the next level (or next world) - no reach for the mouse.
   // Capture phase: the still-focused (frozen) surface would otherwise swallow it.
   useEffect(() => {
     if (!hasNext) return
@@ -93,7 +93,7 @@ export function ResultScreen({ outcome, keystrokes, par, boss, hasNext, nextLabe
           )}
         </div>
         {outcome.xpGained === 0 && outcome.coinsGained === 0 && (
-          <p className="mt-4 text-xs text-ink-dim">already mastered — replaying for practice</p>
+          <p className="mt-4 text-xs text-ink-dim">already mastered - replaying for practice</p>
         )}
 
         {outcome.leveledUp && (

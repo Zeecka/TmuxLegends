@@ -33,13 +33,13 @@ export interface TmuxSurfaceHandle {
 const SCROLL_KEYS = new Set(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' ', '/'])
 
 // After the goal is met, hold on the final tmux state for a beat so the player
-// actually SEES what they did (the new split, the zoom, the detach…) before the
+// actually SEES what they did (the new split, the zoom, the detach...) before the
 // result card slides over it.
 const WIN_REVEAL_MS = 650
 const FAIL_REVEAL_MS = 500
 
 /**
- * The interactive tmux surface — the analog of Vimersion's VimEditor. Holds the
+ * The interactive tmux surface - the analog of Vimersion's VimEditor. Holds the
  * pure engine state, counts keystrokes (VimGolf-style, capture phase so nothing
  * escapes), advances ratcheted boss stages, enforces the boss budget, and renders
  * the pane tree + status bar. Remount (via a `key` on the parent) per challenge.

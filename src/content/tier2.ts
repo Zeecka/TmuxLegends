@@ -3,9 +3,9 @@ import { activeWindowIndex, activeWindowNamed, allOf, windowCount, windowNamed }
 import { single, withWindows } from './build'
 
 /**
- * Tier 2 — "Windows". Panes live inside windows; windows are your tabs. Create
+ * Tier 2 - "Windows". Panes live inside windows; windows are your tabs. Create
  * (c), rename (,), switch (n/p and by number), and close (&). Windows are
- * numbered from 0 — worth internalizing early.
+ * numbered from 0 - worth internalizing early.
  */
 export const tier2: Challenge[] = [
   {

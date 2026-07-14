@@ -1,7 +1,7 @@
 /**
- * The tmux ':' command prompt — a small parser over the command subset that
+ * The tmux ':' command prompt - a small parser over the command subset that
  * matters for learning. Real tmux exposes ~200 commands; we cover the ones a
- * beginner/intermediate reaches for, plus common aliases (neww, splitw, …).
+ * beginner/intermediate reaches for, plus common aliases (neww, splitw, ...).
  * Config-style commands (set/bind/source-file) are accepted as no-ops so a
  * ".tmux.conf" capstone can be typed without errors.
  */
@@ -60,7 +60,7 @@ function flagValue(args: string[], flag: string): string | undefined {
   return i >= 0 && i + 1 < args.length ? args[i + 1] : undefined
 }
 
-/** Non-flag tokens joined — the "name" argument for rename/new. */
+/** Non-flag tokens joined - the "name" argument for rename/new. */
 function positional(args: string[]): string {
   return args.filter((a, i) => !a.startsWith('-') && !(i > 0 && args[i - 1] === '-t')).join(' ')
 }

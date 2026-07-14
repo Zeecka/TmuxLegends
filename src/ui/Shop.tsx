@@ -83,7 +83,7 @@ function AuraStudio() {
 
   return (
     <div className="panel mt-5 p-4 sm:p-5">
-      <p className="text-sm text-ink-dim">Style Muxie’s aura — it follows you everywhere you play.</p>
+      <p className="text-sm text-ink-dim">Style Muxie’s aura - it follows you everywhere you play.</p>
       <div className="mt-4 flex flex-col items-center gap-5 sm:flex-row sm:items-start">
         <div className="w-full max-w-[15rem] shrink-0">
           <HeroPanel reaction="idle" />

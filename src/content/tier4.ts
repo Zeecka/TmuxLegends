@@ -10,7 +10,7 @@ const serverLeftVimRight = splitActive(single({ cmd: 'server' }), 'h', 'vim') //
 const threeToBreak = splitActive(splitActive(single(), 'h'), 'v', 'db') // h[.v[..]] with db pane active
 
 /**
- * Tier 4 — "Rearrange". Once you have panes, you shape them: cycle the layout
+ * Tier 4 - "Rearrange". Once you have panes, you shape them: cycle the layout
  * (Space), swap panes around ({ / }), and break a pane out into its own window
  * (!). This is how a cramped workspace becomes the one you actually want.
  */
@@ -24,7 +24,7 @@ export const tier4: Challenge[] = [
     start: stackedThree,
     goal: { predicate: splitDirIs('h'), describe: 'Panes tiled side by side' },
     par: 2,
-    hint: 'Prefix then Space cycles through tmux’s preset layouts — press it to rebalance the panes.',
+    hint: 'Prefix then Space cycles through tmux’s preset layouts - press it to rebalance the panes.',
   },
   {
     id: 't4-swap',

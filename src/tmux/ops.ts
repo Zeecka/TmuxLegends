@@ -1,7 +1,7 @@
 /**
- * Semantic operations on TmuxState — the verbs both the keystroke grammar
+ * Semantic operations on TmuxState - the verbs both the keystroke grammar
  * (engine.ts) and the ':' command parser (commands.ts) are expressed in.
- * Every function is pure: (state, …) → new state. Kept separate from both
+ * Every function is pure: (state, ...) → new state. Kept separate from both
  * callers so there is no engine ⇄ commands import cycle.
  */
 import {
@@ -143,7 +143,7 @@ export function nextLayout(s: TmuxState): TmuxState {
 }
 
 /** Nudge the nearest matching-direction ancestor split of the active pane.
- *  Approximate (MVP) — enough to teach resize-pane; no tier-1–3 goal depends
+ *  Approximate (MVP) - enough to teach resize-pane; no tier-1-3 goal depends
  *  on exact ratios. */
 export function resizeActive(s: TmuxState, dir: PaneDir, amount = 0.08): TmuxState {
   const w = activeWindow(s)

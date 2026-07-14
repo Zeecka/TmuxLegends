@@ -174,7 +174,7 @@ export const useGame = create<GameStore>()(
         return {
           ...initial,
           ...p,
-          // v2: cosmetics added — backfill and never lose ownership of free items.
+          // v2: cosmetics added - backfill and never lose ownership of free items.
           owned: Array.from(new Set([...(p.owned ?? []), ...initial.owned])),
           equipped: { ...initial.equipped, ...(p.equipped ?? {}) },
           hero: { ...initial.hero, ...(p.hero ?? {}) },

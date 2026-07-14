@@ -10,8 +10,8 @@ const LOG_LINES = [
 ]
 
 /**
- * Tier 3 — "Sessions & Copy". Sessions outlive your terminal: detach (d) and
- * they keep running. Rename ($), spin up more (:new -s). Then copy mode ([) —
+ * Tier 3 - "Sessions & Copy". Sessions outlive your terminal: detach (d) and
+ * they keep running. Rename ($), spin up more (:new -s). Then copy mode ([) -
  * tmux's scrollback + search + yank, the muscle you reach for constantly.
  */
 export const tier3: Challenge[] = [
@@ -24,7 +24,7 @@ export const tier3: Challenge[] = [
     start: single({ session: 'main', cmd: 'server' }),
     goal: { predicate: sessionDetached(), describe: 'The session is detached (still running)' },
     par: 2,
-    hint: "Prefix then d detaches. Nothing is lost — later `tmux attach` drops you right back in.",
+    hint: "Prefix then d detaches. Nothing is lost - later `tmux attach` drops you right back in.",
   },
   {
     id: 't3-rename-session',

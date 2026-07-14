@@ -1,12 +1,12 @@
 /**
- * The tmux keystroke grammar — a pure reducer `reduce(state, key)`.
+ * The tmux keystroke grammar - a pure reducer `reduce(state, key)`.
  *
  * Mirrors real tmux's modal, prefix-driven input model:
- *   normal  — keys go to the shell; only the prefix (C-b) is meaningful
- *   prefix  — the next key is a tmux binding, then back to normal
- *   command — the ':' command prompt (see commands.ts)
- *   copy    — copy-mode navigation / selection / search
- *   rename-window / rename-session — a text prompt
+ *   normal  - keys go to the shell; only the prefix (C-b) is meaningful
+ *   prefix  - the next key is a tmux binding, then back to normal
+ *   command - the ':' command prompt (see commands.ts)
+ *   copy    - copy-mode navigation / selection / search
+ *   rename-window / rename-session - a text prompt
  *
  * No DOM here: the same reducer drives the live surface and the headless
  * par-proving tests. This is the analog of Vimersion's real vim keymap.
@@ -90,7 +90,7 @@ export function run(state: TmuxState, keys: Key[]): TmuxState {
 function reducePrefix(s: TmuxState, k: Key): TmuxState {
   const base: TmuxState = { ...s, status: undefined }
   const norm = (ns: TmuxState): TmuxState => ({ ...ns, mode: NORMAL })
-  // A second prefix (C-b C-b) sends a literal C-b to the pane — a no-op here.
+  // A second prefix (C-b C-b) sends a literal C-b to the pane - a no-op here.
   if (isPrefix(k)) return norm(base)
   switch (k.key) {
     case '%':
@@ -224,7 +224,7 @@ function isAltGraphChar(e: KeyboardEvent): boolean {
 /** Build a normalized Key from a DOM keyboard event (used by TmuxSurface). */
 export function keyFromEvent(e: KeyboardEvent): Key {
   // AltGr-produced characters (e.g. AZERTY '[' = AltGr+5) carry the AltGr chord's
-  // ctrl/alt flags, but the character itself is plain text / a plain binding key —
+  // ctrl/alt flags, but the character itself is plain text / a plain binding key -
   // strip those flags so '[' matches like any other key and passes isPrintable.
   if (isAltGraphChar(e)) return { key: e.key, shift: e.shiftKey }
   return { key: e.key, ctrl: e.ctrlKey, alt: e.altKey, shift: e.shiftKey }

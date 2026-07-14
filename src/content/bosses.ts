@@ -13,9 +13,9 @@ import {
 import { single } from './build'
 
 /**
- * Bosses — multi-stage challenges fought in the SAME session, with a keystroke
+ * Bosses - multi-stage challenges fought in the SAME session, with a keystroke
  * "HP bar" (keystrokeBudget). Stages ratchet: once cleared they stay cleared.
- * Not unlock gates — they're the victory lap for a tier's whole toolkit.
+ * Not unlock gates - they're the victory lap for a tier's whole toolkit.
  */
 export const bosses: Challenge[] = [
   {
@@ -35,7 +35,7 @@ export const bosses: Challenge[] = [
     ],
     par: 10,
     keystrokeBudget: 22,
-    hint: 'Prefix % (left|right), then prefix " to split the right pane. Prefix o back to the left, prefix " again — four panes. Finish with prefix z.',
+    hint: 'Prefix % (left|right), then prefix " to split the right pane. Prefix o back to the left, prefix " again - four panes. Finish with prefix z.',
   },
   {
     id: 'b2-session-rescue',

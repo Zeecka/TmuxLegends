@@ -16,13 +16,13 @@ const REACTION_FACE: Partial<Record<Reaction, string>> = {
 
 const LINE: Record<Reaction, string> = {
   idle: 'Prefix first, always.',
-  typing: 'Nice — keep going…',
+  typing: 'Nice - keep going...',
   win: 'Clean solve!',
   levelup: 'Level up! 🚀',
-  fail: 'Shake it off — retry.',
+  fail: 'Shake it off - retry.',
 }
 
-/** Muxie — your companion. Face is the equipped avatar (with expressive reaction
+/** Muxie - your companion. Face is the equipped avatar (with expressive reaction
  *  swaps), aura is customizable (color / effect / intensity) from Customize. */
 export function HeroPanel({ reaction }: { reaction: Reaction }) {
   const avatar = useGame((s) => s.equipped.avatar)
