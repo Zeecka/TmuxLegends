@@ -7,9 +7,10 @@ interface Props {
   onMap: () => void
   onArcade: () => void
   onCustomize: () => void
+  onCheatsheet: () => void
 }
 
-export function Hud({ onHome, onMap, onArcade, onCustomize }: Props) {
+export function Hud({ onHome, onMap, onArcade, onCustomize, onCheatsheet }: Props) {
   const coins = useGame((s) => s.coins)
   const streak = useGame((s) => s.streak.count)
   const soundOn = useGame((s) => s.soundOn)
@@ -28,6 +29,7 @@ export function Hud({ onHome, onMap, onArcade, onCustomize }: Props) {
         <nav className="ml-2 hidden gap-1 sm:flex">
           <NavButton onClick={onMap} label="Campaign" />
           <NavButton onClick={onArcade} label="Prefix Rush" />
+          <NavButton onClick={onCheatsheet} label="Cheatsheet" />
           <NavButton onClick={onCustomize} label="Customize" />
         </nav>
 

@@ -5,6 +5,7 @@ import { Hud } from './ui/Hud'
 import { BindingBelt } from './ui/BindingBelt'
 import { WorldMap } from './ui/WorldMap'
 import { Shop } from './ui/Shop'
+import { Cheatsheet } from './ui/Cheatsheet'
 import { Emoji } from './ui/Emoji'
 import { CampaignMode } from './modes/CampaignMode'
 import { ArcadeMode } from './modes/ArcadeMode'
@@ -15,7 +16,13 @@ import { BINDINGS } from './tmux/catalog'
 import { COSMETIC_BY_ID } from './game/cosmetics'
 import { CHALLENGES, CHALLENGE_BY_ID, nextChallengeId } from './content/tiers'
 
-type Screen = { name: 'home' } | { name: 'map' } | { name: 'play'; id: string } | { name: 'arcade' } | { name: 'shop' }
+type Screen =
+  | { name: 'home' }
+  | { name: 'map' }
+  | { name: 'play'; id: string }
+  | { name: 'arcade' }
+  | { name: 'shop' }
+  | { name: 'cheatsheet' }
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>({ name: 'home' })
@@ -44,13 +51,14 @@ export default function App() {
     map: () => setScreen({ name: 'map' }),
     arcade: () => setScreen({ name: 'arcade' }),
     shop: () => setScreen({ name: 'shop' }),
+    cheatsheet: () => setScreen({ name: 'cheatsheet' }),
     play: (id: string) => setScreen({ name: 'play', id }),
   }
 
   return (
     <div className="min-h-full">
       <Background />
-      <Hud onHome={go.home} onMap={go.map} onArcade={go.arcade} onCustomize={go.shop} />
+      <Hud onHome={go.home} onMap={go.map} onArcade={go.arcade} onCustomize={go.shop} onCheatsheet={go.cheatsheet} />
 
       <AnimatePresence mode="wait">
         <motion.main
@@ -62,11 +70,18 @@ export default function App() {
           className="relative z-10"
         >
           {screen.name === 'home' && (
-            <Home onContinue={() => go.play(nextChallengeId(useGame.getState().completed))} onMap={go.map} onArcade={go.arcade} onCustomize={go.shop} />
+            <Home
+              onContinue={() => go.play(nextChallengeId(useGame.getState().completed))}
+              onMap={go.map}
+              onArcade={go.arcade}
+              onCustomize={go.shop}
+              onCheatsheet={go.cheatsheet}
+            />
           )}
           {screen.name === 'map' && <WorldMap onPlay={go.play} />}
           {screen.name === 'arcade' && <ArcadeMode />}
           {screen.name === 'shop' && <Shop />}
+          {screen.name === 'cheatsheet' && <Cheatsheet />}
           {screen.name === 'play' &&
             (CHALLENGE_BY_ID[screen.id] ? (
               <CampaignMode challenge={CHALLENGE_BY_ID[screen.id]} onPlay={go.play} onMap={go.map} />
@@ -84,11 +99,13 @@ function Home({
   onMap,
   onArcade,
   onCustomize,
+  onCheatsheet,
 }: {
   onContinue: () => void
   onMap: () => void
   onArcade: () => void
   onCustomize: () => void
+  onCheatsheet: () => void
 }) {
   const xp = useGame((s) => s.xp)
   const completed = useGame((s) => s.completed)
@@ -148,6 +165,12 @@ function Home({
             className="inline-flex items-center gap-1.5 rounded-xl border border-border px-5 py-3 text-ink-dim transition-colors hover:border-term hover:text-term"
           >
             <Emoji name="palette" size={16} /> Customize
+          </button>
+          <button
+            onClick={onCheatsheet}
+            className="inline-flex items-center gap-1.5 rounded-xl border border-border px-5 py-3 text-ink-dim transition-colors hover:border-term hover:text-term"
+          >
+            <Emoji name="keyboard" size={16} /> Cheatsheet
           </button>
         </div>
       </div>
