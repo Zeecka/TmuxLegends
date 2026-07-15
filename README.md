@@ -34,12 +34,13 @@ challenge is scored VimGolf-style against a **par**.
 | 🎯 **Par scoring** | every keystroke counts, so beat *par* for ⭐⭐⭐ |
 | 🧩 **A real tmux model** | challenges verify actual tmux state (pane trees, layouts, window/session names, copy-mode selection), not just "did you press the right key" |
 | 👾 **Boss fights** | multi-stage scenarios with a **keystroke-budget** bar; run out and you're *repelled*, but losing costs nothing but a retry |
-| 🤖 **Muxie, your buddy** | a mascot that idles, reacts while you type, and celebrates your wins |
+| 🤖 **Muxie, your Hero** | one customizable companion - style its colors, visor, accessory and aura, then watch it idle, react while you type, and celebrate your wins |
 | ⌨️ **Binding Belt** | your growing, category-grouped collection of mastered bindings |
 | 🕹️ **Prefix Rush** | a 30-second reflex drill for prefix-then-key muscle memory |
 | 📄 **Cheatsheet** | a searchable, in-app tmux reference you can **download as a PDF** - generated fully offline with zero dependencies |
-| 🎨 **Customize** | spend coins on avatars, accent **themes** (the whole UI recolors live), animated backgrounds, and a tunable hero aura |
-| 💾 **Zero backend** | progress in `localStorage` with versioned migrations; fonts self-hosted, so it's **fully offline** |
+| 🎨 **Customize** | style your Hero for free, and spend coins on accent **themes** (the whole UI recolors live) and animated backgrounds |
+| 🌌 **3D world layer** | an optional cel-shaded WebGL stage behind the smoked-glass panels, auto-detected per device and lazy-loaded - weak devices get an equally complete 2D tier |
+| 💾 **Offline-first** | progress in `localStorage` with versioned migrations; fonts self-hosted, so it plays **fully offline**. An [optional backend](server/README.md) adds sign-in and verified score sharing - skip it and nothing is lost |
 
 ## 🗺️ The worlds
 
@@ -104,21 +105,26 @@ npm run build      # static bundle in dist/ (deploy anywhere static)
 npm run preview    # serve the production build (port 4173)
 ```
 
-Deploy `dist/` anywhere static (Netlify, Vercel, GitHub Pages). No backend, no account, no
-special headers. It's a plain SPA.
+Deploy `dist/` anywhere static (Netlify, Vercel, GitHub Pages) - no special headers, it's a
+plain SPA. The game is complete that way: accounts are purely additive, and with no `/api`
+reachable the app reports offline and hides the account UI.
 
 ### 🐳 Or with Docker
 
 ```bash
 docker compose -f docker-compose.dev.yml up   # HMR dev server on http://localhost:8972
+docker compose up -d                          # production stack on http://localhost:8973
 ```
 
-Source is bind-mounted, so edits under `src/` hot-reload the browser with no rebuild.
+For dev, source is bind-mounted, so edits under `src/` hot-reload the browser with no rebuild.
+The production stack serves the built SPA behind nginx and proxies `/api/` to the optional
+accounts service; bring it up without OAuth credentials and accounts simply stay off. See
+[`server/README.md`](server/README.md) to switch them on.
 
 ## 🧪 Testing: pars are proven, not guessed
 
 ```bash
-npm test           # 63 vitest tests
+npm test           # 74 vitest tests
 npm run typecheck  # tsc across the project
 npm run build      # production build
 ```
@@ -128,7 +134,10 @@ npm run build      # production build
 | `tests/content.test.ts` | ids unique · taught bindings resolve to the catalog · boss budgets sane |
 | `tests/par.test.ts` | **every challenge's par is achieved by a reference solution driven through the real engine**, including `:` commands, copy mode, and multi-stage bosses |
 | `tests/pdf.test.ts` | the offline cheatsheet PDF parses back cleanly - every cross-reference byte-offset lands on its object and each stream length is exact |
+| `tests/hero.test.ts` | the Hero resolves and normalizes · a v2 save's flat aura migrates · retired avatars are refunded to the coin, never silently dropped |
 | `tests/driver.ts` | a headless key-runner that feeds keystrokes into the same `reduce()` the UI uses |
+
+The optional backend has its own suite: `cd server && npm test` (55 tests, zero npm deps).
 
 ## 🏗️ Architecture
 
@@ -147,11 +156,20 @@ src/
              verify.ts   composable goal predicates (paneCount, windowNamed)
              TmuxSurface.tsx  renders the pane tree + status bar, captures keys
   game/      types.ts (Challenge/Goal)  store.ts  xp.ts  sound.ts  runtime.ts  cosmetics.ts
+             heroParts.ts (the Hero model + save migration)  quality.ts (webgl/lite tier)
+             account.ts  share.ts  links.ts
              cheatsheet.ts (reference data)  pdf.ts (dependency-free PDF writer)
+  three/     Stage3D.tsx (the WebGL underlay)  Hero3D.tsx  HeroExtras.tsx  AmbientScene.tsx
+             backdrops.tsx (shader backdrops)  toon.ts  stageState.ts (UI <-> 3D bridge)
+             sceneRegistry.ts (+ .meta.ts, the 3D-free mirror)
   content/   tier1.ts to tier6.ts  bosses.ts  tiers.ts  build.ts
   modes/     CampaignMode.tsx  ArcadeMode.tsx
-  ui/        Hud, WorldMap, ResultScreen, BindingBelt, HeroPanel, Shop, Cheatsheet, atoms
+  ui/        Hud, WorldMap, ResultScreen, BindingBelt, HeroPanel, Shop, atoms
+             HeroMark/Avatar (the 2D Hero)  Background/Parallax (the lite tier)
+             Cheatsheet + CheatsheetModal  HowToPlay  Account  Profile
+server/      optional accounts + verified-score API (zero npm deps) - see server/README.md
 tests/       driver.ts  par.test.ts (every par proven)  content.test.ts  pdf.test.ts
+             hero.test.ts (Hero + the v2->v3 avatar-refund migration)
 ```
 
 ## ✍️ Adding a challenge
@@ -179,8 +197,10 @@ and `npm test` will *prove* the par is achievable. A `Goal` is either a `targetL
 
 ## 🧭 Deferred (structured to add later, exactly as Vimersion isolates them)
 
-- **3D/WebGL world layer:** an optional cel-shaded scene behind the smoked-glass panels.
-- **Accounts / verified-share backend:** optional sign-in plus cross-device sync.
+- **Per-level 3D scenes:** the stage, the shader backdrops and the registry all ship; no tmux
+  level claims a bespoke world yet, so every screen falls through to the equipped backdrop.
+  Register one in `src/three/sceneRegistry.ts` (and `sceneRegistry.meta.ts`) to add it - note
+  Tmuxpert frames play with the surface on the *right*, mirroring Vimersion.
 - **`.tmux.conf` capstones:** the command prompt already accepts `set`/`bind`/`source-file`
   as no-ops, but a config tier that *verifies option effects* needs the engine to model those
   effects first. (Tier 6 already ships `resize-pane`, paste, and command-line scripting.)

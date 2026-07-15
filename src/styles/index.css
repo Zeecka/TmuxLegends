@@ -180,6 +180,10 @@ body {
   85% { opacity: 0.9; }
   100% { transform: translateY(-46px) scale(1.15); opacity: 0; }
 }
+@keyframes tx-hero-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
 @keyframes tx-hero-idle {
   0%, 100% { transform: translateY(0) rotate(0deg); }
   50% { transform: translateY(-2px) rotate(1.2deg); }

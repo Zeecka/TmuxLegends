@@ -1,0 +1,37 @@
+# Production stack: the built SPA behind nginx, plus the optional accounts API.
+#
+#   docker compose up -d          # http://localhost:8973
+#
+# The API is optional. Bring the stack up without OAuth credentials and the app
+# runs exactly as before - /api/config reports no providers, the account UI stays
+# hidden, and progress is saved locally. Configure the provider secrets (see
+# server/.env.example) to switch accounts on.
+services:
+  tmuxpert:
+    build: .
+    image: tmuxpert:latest
+    container_name: tmuxpert
+    ports:
+      - "8973:80"
+    restart: unless-stopped
+    depends_on:
+      - api
+
+  api:
+    build: ./server
+    image: tmuxpert-api:latest
+    container_name: tmuxpert-api
+    restart: unless-stopped
+    volumes:
+      - tmuxpert-data:/data
+    environment:
+      # No host port: nginx in the tmuxpert service proxies /api/ here.
+      PUBLIC_ORIGIN: ${PUBLIC_ORIGIN:-http://localhost:8973}
+      SESSION_SECRET: ${SESSION_SECRET:-}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET:-}
+
+volumes:
+  tmuxpert-data:

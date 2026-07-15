@@ -1,8 +1,8 @@
 /**
  * The tmux cheatsheet - a curated, accurate quick-reference organized the way a
  * learner reaches for it. This is the SINGLE SOURCE OF TRUTH shared by the
- * browsable Cheatsheet page (src/ui/Cheatsheet.tsx) and the offline PDF export
- * (src/game/pdf.ts), so the two can never drift.
+ * in-app cheatsheet modal (src/ui/CheatsheetModal.tsx) and the offline PDF
+ * export (src/game/pdf.ts), so the two can never drift.
  *
  * Rows tagged `sim: true` are things you can actually practise inside Tmuxpert's
  * simulator today; untagged rows are real-tmux reference the trainer doesn't

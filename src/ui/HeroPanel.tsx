@@ -1,90 +1,247 @@
-import { motion } from 'framer-motion'
+import { Suspense, lazy, useEffect, useRef, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { useGame, MASTERY_THRESHOLD } from '../game/store'
+import { levelProgress } from '../game/xp'
+import { BINDINGS } from '../tmux/catalog'
+import { AURA_STYLES } from '../game/heroParts'
+import { WORLDS, challengesForTier } from '../content/tiers'
+import { sfx } from '../game/sound'
+import { effectiveQuality } from '../game/quality'
+import { useStage, type HeroReaction } from '../three/stageState'
+import { PlayerAvatar } from './Avatar'
 import { Emoji } from './Emoji'
-import { XPBar } from './XPBar'
-import { useGame } from '../game/store'
-import { COSMETIC_BY_ID, HERO_EFFECTS } from '../game/cosmetics'
 
-export type Reaction = 'idle' | 'typing' | 'win' | 'levelup' | 'fail'
+/** How the hero should feel right now, driven by the play screen. */
+export type Reaction = HeroReaction
 
-// Reaction faces temporarily override the equipped avatar for expressive moments.
-const REACTION_FACE: Partial<Record<Reaction, string>> = {
-  win: 'party',
-  levelup: 'starstruck',
-  fail: 'cry',
-  typing: 'thinking',
+// Local Suspense boundary — only the portrait ever suspends, never the surface.
+const Hero3D = lazy(() => import('../three/Hero3D'))
+
+const EMOTES = ['cool', 'muscle', 'party', 'starstruck', 'wave', 'fire'] as const
+
+/** Playful rank title derived from level (purely cosmetic flavor). */
+const RANKS = ['Rookie', 'Operator', 'Multiplexer', 'Hacker', 'Wizard', 'Legend']
+const rankFor = (level: number) => RANKS[Math.min(RANKS.length - 1, Math.floor((level - 1) / 3))]
+
+// Deterministic particle spread (no Math.random — keeps things stable across renders).
+const PARTICLES = [
+  { left: '12%', delay: '0s', dur: '3.4s' },
+  { left: '30%', delay: '0.8s', dur: '4.1s' },
+  { left: '50%', delay: '1.6s', dur: '3.0s' },
+  { left: '68%', delay: '0.4s', dur: '3.8s' },
+  { left: '84%', delay: '1.2s', dur: '4.4s' },
+  { left: '42%', delay: '2.2s', dur: '3.3s' },
+]
+
+/** The 2D hero mark with spinning aura — lite tier + 3D loading fallback. */
+function ClassicPortrait({ reaction, bobClass }: { reaction: Reaction; bobClass: string }) {
+  return (
+    <div className="absolute inset-x-0 bottom-2 grid place-items-center">
+      <motion.div
+        animate={reaction === 'win' || reaction === 'levelup' ? { scale: [1, 1.18, 1], rotate: [0, -7, 7, 0] } : { scale: 1 }}
+        transition={{ duration: 0.6 }}
+      >
+        <div className={bobClass}>
+          <div className="relative grid place-items-center">
+            <div
+              className="absolute h-[104px] w-[104px] rounded-full opacity-70 blur-[7px]"
+              style={{
+                background: 'conic-gradient(from 0deg, var(--color-term), var(--color-cyan), var(--color-magenta), var(--color-term))',
+                animation: 'tx-spin-slow 6s linear infinite',
+              }}
+            />
+            <span className="relative grid h-[88px] w-[88px] place-items-center rounded-full bg-bg ring-1 ring-border">
+              <PlayerAvatar size={62} />
+            </span>
+          </div>
+        </div>
+      </motion.div>
+    </div>
+  )
 }
 
-const LINE: Record<Reaction, string> = {
-  idle: 'Prefix first, always.',
-  typing: 'Nice - keep going...',
-  win: 'Clean solve!',
-  levelup: 'Level up! 🚀',
-  fail: 'Shake it off - retry.',
-}
-
-/** Muxie - your companion. Face is the equipped avatar (with expressive reaction
- *  swaps), aura is customizable (color / effect / intensity) from Customize. */
 export function HeroPanel({ reaction }: { reaction: Reaction }) {
-  const avatar = useGame((s) => s.equipped.avatar)
-  const hero = useGame((s) => s.hero)
+  const xp = useGame((s) => s.xp)
+  const coins = useGame((s) => s.coins)
+  const completed = useGame((s) => s.completed)
+  const mastery = useGame((s) => s.mastery)
+  const arcadeBest = useGame((s) => s.arcadeBest)
 
-  const baseFace = COSMETIC_BY_ID[avatar]?.emoji ?? 'robot'
-  const face = REACTION_FACE[reaction] ?? baseFace
-  const auraColor = hero.color ?? 'var(--color-term)'
-  const effectEmoji = HERO_EFFECTS.find((e) => e.id === hero.effect)?.emoji ?? 'sparkles'
-  const showParticles = hero.intensity > 0.05
+  const [emote, setEmote] = useState<string | null>(null)
+  // The aura is a persisted customization (Shop → Characters / here).
+  const heroCustom = useGame((s) => s.hero)
+  const setHero = useGame((s) => s.setHero)
+  const auraStyle = heroCustom.aura.style
+  const auraEmoji = AURA_STYLES.find((a) => a.id === auraStyle)?.emoji ?? 'sparkles'
+  const clearTimer = useRef<number | undefined>(undefined)
+
+  const quality = useGame((s) => s.quality)
+  const contextLost = useStage((s) => s.contextLost)
+  const tier = contextLost ? 'lite' : effectiveQuality(quality)
+
+  const { level, into, span, pct } = levelProgress(xp)
+  const name = rankFor(level)
+
+  const mastered = BINDINGS.filter((b) => (mastery[b.id] ?? 0) >= MASTERY_THRESHOLD).length
+  const perfects = Object.values(completed).filter((r) => r.stars >= 3).length
+  const solved = Object.keys(completed).length
+  const worldsCleared = WORLDS.filter((w) => {
+    const cs = challengesForTier(w.tier)
+    return cs.length > 0 && cs.every((c) => completed[c.id])
+  }).length
+
+  const pop = (name: string, hold = 1700) => {
+    setEmote(name)
+    window.clearTimeout(clearTimer.current)
+    clearTimer.current = window.setTimeout(() => setEmote(null), hold)
+  }
+
+  // React to gameplay: celebrate wins, focus while typing, relax when idle.
+  useEffect(() => {
+    window.clearTimeout(clearTimer.current)
+    if (reaction === 'win' || reaction === 'levelup') pop('party', 2200)
+    else if (reaction === 'typing') setEmote('thinking')
+    else setEmote(null)
+    return () => window.clearTimeout(clearTimer.current)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [reaction])
+
+  const bobClass =
+    reaction === 'typing'
+      ? 'animate-[tx-hero-bob_0.55s_ease-in-out_infinite]'
+      : 'animate-[tx-hero-idle_4s_ease-in-out_infinite]'
+
+  const noFocusSteal = (e: React.MouseEvent) => e.preventDefault()
+
+  const trophies = [
+    { icon: 'trophy', label: 'worlds cleared', n: worldsCleared },
+    { icon: 'star', label: 'perfect solves', n: perfects },
+    { icon: 'gem', label: 'bindings mastered', n: mastered },
+    { icon: 'crown', label: 'levels solved', n: solved },
+    { icon: 'bolt', label: 'rush best', n: arcadeBest },
+  ]
 
   return (
-    <div className="panel flex flex-col items-center gap-3 p-4">
-      <div className="relative grid h-28 w-28 place-items-center">
-        <div
-          aria-hidden
-          className="tx-anim absolute inset-0 rounded-full"
-          style={{
-            opacity: 0.35 + hero.intensity * 0.5,
-            background: `conic-gradient(from 0deg, ${auraColor}, transparent 40%, var(--color-cyan), transparent 75%, ${auraColor})`,
-            animation: 'tx-spin-slow 6s linear infinite',
-            mask: 'radial-gradient(circle, transparent 58%, black 60%)',
-            WebkitMask: 'radial-gradient(circle, transparent 58%, black 60%)',
-          }}
-        />
+    <aside className="panel relative flex flex-col gap-4 overflow-hidden p-4">
+      <div className="text-center text-[10px] uppercase tracking-[0.2em] text-ink-dim">Your Hero</div>
 
-        {/* Rising effect particles. */}
-        {showParticles &&
-          [0, 1, 2].map((i) => (
+      {/* portrait stage */}
+      <div className="relative h-40 select-none">
+        {/* rising particle effects */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-2 top-8">
+          {PARTICLES.map((p, i) => (
             <span
               key={i}
-              aria-hidden
-              className="tx-anim absolute bottom-2"
-              style={{
-                left: `${28 + i * 22}%`,
-                opacity: hero.intensity,
-                animation: `tx-float ${2.4 + i * 0.4}s ease-in ${i * 0.8}s infinite`,
-              }}
+              className="absolute bottom-0"
+              style={{ left: p.left, animation: `tx-float ${p.dur} ease-in-out ${p.delay} infinite` }}
             >
-              <Emoji name={effectEmoji} size={14} />
+              <Emoji name={auraEmoji} size={14} />
             </span>
           ))}
+        </div>
 
-        <motion.div
-          key={reaction}
-          initial={{ scale: 0.7 }}
-          animate={reaction === 'win' || reaction === 'levelup' ? { scale: [1, 1.18, 1], rotate: [0, -7, 7, 0] } : { scale: 1 }}
-          transition={{ type: 'spring', stiffness: 260, damping: 14 }}
-          className="grid h-20 w-20 place-items-center rounded-full border border-border bg-panel-2"
-        >
-          <Emoji name={face} size={44} />
-        </motion.div>
+        {/* emote speech bubble */}
+        <AnimatePresence>
+          {emote && (
+            <motion.div
+              key={emote}
+              className="absolute left-1/2 top-0 z-10 -translate-x-1/2"
+              initial={{ opacity: 0, y: 8, scale: 0.6 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.6 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 18 }}
+            >
+              <div className="relative rounded-2xl border border-border bg-panel-2 px-2.5 py-1.5 shadow-lg">
+                <Emoji name={emote} size={22} />
+                <span className="absolute -bottom-1 left-1/2 h-2 w-2 -translate-x-1/2 rotate-45 border-b border-r border-border bg-panel-2" />
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* character: 3D hero in the webgl tier, 2D mark in lite (and as the
+            Suspense fallback while the 3D chunk/model loads). */}
+        {tier === 'webgl' ? (
+          <div className="absolute inset-x-0 bottom-0 top-2">
+            <Suspense fallback={<ClassicPortrait reaction={reaction} bobClass={bobClass} />}>
+              <Hero3D reaction={reaction} hero={heroCustom} />
+            </Suspense>
+          </div>
+        ) : (
+          <ClassicPortrait reaction={reaction} bobClass={bobClass} />
+        )}
       </div>
 
+      {/* name + level + xp bar */}
       <div className="text-center">
-        <p className="font-terminal text-lg text-ink">Muxie</p>
-        <p className="text-[11px] text-ink-dim">your split-brain buddy</p>
+        <div className="font-terminal text-2xl font-semibold text-ink">{name}</div>
+        <div className="text-xs text-term">Level {level}</div>
+        <div className="mt-2 h-2 overflow-hidden rounded-full bg-panel-2">
+          <div
+            className="h-full rounded-full transition-[width] duration-500"
+            style={{ width: `${Math.round(pct * 100)}%`, background: 'linear-gradient(90deg, var(--color-term), var(--color-cyan))' }}
+          />
+        </div>
+        <div className="mt-1 text-[10px] tabular-nums text-ink-dim">{into} / {span} XP</div>
       </div>
 
-      <XPBar showNumbers={false} />
+      {/* emotes */}
+      <div>
+        <div className="mb-1.5 text-[10px] uppercase tracking-widest text-ink-dim">Emotes</div>
+        <div className="grid grid-cols-6 gap-1">
+          {EMOTES.map((name) => (
+            <button
+              key={name}
+              onMouseDown={noFocusSteal}
+              onClick={() => { pop(name); sfx.ui() }}
+              title={`emote: ${name}`}
+              className="grid place-items-center rounded-md border border-border bg-panel-2 py-1.5 transition-transform hover:scale-110 hover:border-term"
+            >
+              <Emoji name={name} size={18} />
+            </button>
+          ))}
+        </div>
+      </div>
 
-      <p className="min-h-[2.5em] text-center text-xs text-ink-dim">{LINE[reaction]}</p>
-    </div>
+      {/* aura style — full customization (color, intensity) lives in Shop → Characters.
+          Two per row: five labelled buttons cannot share one 18rem row without
+          their text colliding, so they wrap instead of being squeezed. */}
+      <div>
+        <div className="mb-1.5 text-[10px] uppercase tracking-widest text-ink-dim">Aura</div>
+        <div className="grid grid-cols-2 gap-1.5">
+          {AURA_STYLES.map((a) => (
+            <button
+              key={a.id}
+              onMouseDown={noFocusSteal}
+              onClick={() => { setHero({ aura: { style: a.id } }); sfx.ui() }}
+              className={`flex items-center justify-center gap-1 rounded-md border px-2 py-1.5 text-xs transition-colors last:odd:col-span-2 ${
+                auraStyle === a.id ? 'border-term text-term' : 'border-border text-ink-dim hover:text-ink'
+              }`}
+            >
+              <Emoji name={a.emoji} size={14} /> {a.name}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* loadout / trophies */}
+      <div>
+        <div className="mb-1.5 text-[10px] uppercase tracking-widest text-ink-dim">Loadout</div>
+        <div className="grid grid-cols-5 gap-1.5">
+          {trophies.map((t) => (
+            <div
+              key={t.icon}
+              title={`${t.n} ${t.label}`}
+              className={`flex flex-col items-center gap-0.5 rounded-md border border-border bg-panel-2 py-1.5 ${t.n > 0 ? '' : 'opacity-40'}`}
+            >
+              <Emoji name={t.icon} size={16} />
+              <span className="text-[11px] font-bold tabular-nums text-ink">{t.n}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <p className="text-center text-[10px] text-ink-dim">Coins <span className="tabular-nums text-amber">{coins}</span> · earn more to unlock gear in the Shop</p>
+    </aside>
   )
 }

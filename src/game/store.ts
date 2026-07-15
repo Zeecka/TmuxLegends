@@ -1,24 +1,27 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import type { Challenge, ChallengeResult, Stars } from './types'
+import type { QualitySetting } from './quality'
 import { levelFromXp, starsFor, xpForChallenge } from './xp'
-import { COSMETIC_BY_ID, DEFAULTS, FREE_COSMETICS, type HeroEffect } from './cosmetics'
+import { COSMETIC_BY_ID, DEFAULTS, FREE_COSMETICS } from './cosmetics'
+import {
+  INITIAL_HERO,
+  LEGACY_AVATAR_IDS,
+  legacyAvatarRefund,
+  normalizeHero,
+  type HeroAura,
+  type HeroCustom,
+} from './heroParts'
 
 /** Reps of a binding before it counts as "mastered" (fills the Binding Belt). */
 export const MASTERY_THRESHOLD = 3
 
 export interface Equipped {
-  avatar: string
   theme: string
   background: string
 }
 
-/** Hero (Muxie) aura customization. `color: null` = follow the equipped theme. */
-export interface HeroCustom {
-  color: string | null
-  effect: HeroEffect
-  intensity: number
-}
+export type { HeroCustom }
 
 export interface CompleteOutcome {
   stars: Stars
@@ -41,6 +44,8 @@ interface Persisted {
   owned: string[]
   equipped: Equipped
   hero: HeroCustom
+  /** Graphics quality: 'auto' resolves per-device via detectQuality(). */
+  quality: QualitySetting
 }
 
 interface GameStore extends Persisted {
@@ -48,9 +53,10 @@ interface GameStore extends Persisted {
   recordArcade: (score: number, commands: string[]) => { isNewBest: boolean; coinsGained: number }
   buyItem: (id: string) => boolean
   equipItem: (id: string) => void
-  setHero: (partial: Partial<HeroCustom>) => void
+  setHero: (partial: Partial<Omit<HeroCustom, 'aura'>> & { aura?: Partial<HeroAura> }) => void
   bumpStreak: () => void
   toggleSound: () => void
+  setQuality: (q: QualitySetting) => void
   resetProgress: () => void
 }
 
@@ -75,7 +81,8 @@ const initial: Persisted = {
   arcadeBest: 0,
   owned: [...FREE_COSMETICS],
   equipped: { ...DEFAULTS },
-  hero: { color: null, effect: 'sparkles', intensity: 0.6 },
+  hero: INITIAL_HERO,
+  quality: 'auto',
 }
 
 export const useGame = create<GameStore>()(
@@ -150,7 +157,8 @@ export const useGame = create<GameStore>()(
         set({ equipped: { ...s.equipped, [item.kind]: id } })
       },
 
-      setHero: (partial) => set((s) => ({ hero: { ...s.hero, ...partial } })),
+      setHero: (partial) =>
+        set((s) => ({ hero: { ...s.hero, ...partial, aura: { ...s.hero.aura, ...(partial.aura ?? {}) } } })),
 
       bumpStreak: () => {
         const s = get()
@@ -164,21 +172,40 @@ export const useGame = create<GameStore>()(
 
       toggleSound: () => set((s) => ({ soundOn: !s.soundOn })),
 
+      setQuality: (q) => set({ quality: q }),
+
       resetProgress: () => set({ ...initial, owned: [...initial.owned], equipped: { ...initial.equipped } }),
     }),
     {
       name: 'tmuxpert-save',
-      version: 2,
-      migrate: (persisted) => {
-        const p = (persisted ?? {}) as Partial<Persisted>
-        return {
+      version: 3,
+      migrate: (persisted, version) => {
+        const p = (persisted ?? {}) as Record<string, any>
+        const pe = (p.equipped ?? {}) as Record<string, unknown>
+        const merged = {
           ...initial,
           ...p,
           // v2: cosmetics added - backfill and never lose ownership of free items.
-          owned: Array.from(new Set([...(p.owned ?? []), ...initial.owned])),
-          equipped: { ...initial.equipped, ...(p.equipped ?? {}) },
-          hero: { ...initial.hero, ...(p.hero ?? {}) },
+          owned: Array.from(new Set([...((p.owned as string[]) ?? []), ...initial.owned])),
+          // v3: `equipped.avatar` was removed - keep only theme + background.
+          equipped: {
+            theme: typeof pe.theme === 'string' ? pe.theme : initial.equipped.theme,
+            background: typeof pe.background === 'string' ? pe.background : initial.equipped.background,
+          },
+          // v3: coerce the old flat aura {color,effect,intensity} to the Hero shape.
+          hero: normalizeHero(p.hero),
+        } as Persisted
+        // v3: the emoji-avatar roster gave way to the one customizable Hero.
+        // Refund what those avatars cost BEFORE dropping them from `owned`, so
+        // retiring the roster never takes coins away from a player.
+        if (version < 3) {
+          merged.coins += legacyAvatarRefund(merged.owned)
         }
+        merged.owned = merged.owned.filter((id) => !LEGACY_AVATAR_IDS.includes(id))
+        // Repair anything now pointing at an id this build no longer knows.
+        if (!COSMETIC_BY_ID[merged.equipped.theme]) merged.equipped.theme = DEFAULTS.theme
+        if (!COSMETIC_BY_ID[merged.equipped.background]) merged.equipped.background = DEFAULTS.background
+        return merged
       },
       partialize: (s): Persisted => ({
         xp: s.xp,
@@ -191,6 +218,7 @@ export const useGame = create<GameStore>()(
         owned: s.owned,
         equipped: s.equipped,
         hero: s.hero,
+        quality: s.quality,
       }),
     },
   ),
