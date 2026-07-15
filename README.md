@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="public/tmux-logo.svg" width="72" alt="Tmuxpert logo">
+<img src="docs/media/logo.png" width="72" alt="Tmuxpert logo">
 
 # :Tmuxpert
 
