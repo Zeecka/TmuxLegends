@@ -1,18 +1,27 @@
 # Production stack: the built SPA behind nginx, plus the optional accounts API.
 #
-#   docker compose up -d          # http://localhost:8973
+#   docker compose up -d --build   # http://localhost:8974
+#
+# Port 8974 is the one this project already publishes on; the dev stack owns 8972,
+# so unlike Vimersion (dev and prod share 8971) both can run side by side.
 #
 # The API is optional. Bring the stack up without OAuth credentials and the app
 # runs exactly as before - /api/config reports no providers, the account UI stays
 # hidden, and progress is saved locally. Configure the provider secrets (see
 # server/.env.example) to switch accounts on.
+
+# Explicit project name. Both compose files would otherwise default to the
+# directory name ("tmuxpert") and, sharing a service key `api`, each `up` would
+# recreate the other stack's container out from under it.
+name: tmuxpert
+
 services:
   tmuxpert:
     build: .
     image: tmuxpert:latest
-    container_name: tmuxpert
+    container_name: tmuxpert-web
     ports:
-      - "8973:80"
+      - "127.0.0.1:8974:80"
     restart: unless-stopped
     depends_on:
       - api
@@ -26,7 +35,7 @@ services:
       - tmuxpert-data:/data
     environment:
       # No host port: nginx in the tmuxpert service proxies /api/ here.
-      PUBLIC_ORIGIN: ${PUBLIC_ORIGIN:-http://localhost:8973}
+      PUBLIC_ORIGIN: ${PUBLIC_ORIGIN:-http://localhost:8974}
       SESSION_SECRET: ${SESSION_SECRET:-}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}

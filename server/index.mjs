@@ -23,7 +23,7 @@ const MAX_SNAPSHOT_BYTES = 256 * 1024
 const PUT_MIN_INTERVAL_MS = 2000
 
 export function loadConfig(env = process.env) {
-  const publicOrigin = (env.PUBLIC_ORIGIN || 'http://localhost:8973').replace(/\/+$/, '')
+  const publicOrigin = (env.PUBLIC_ORIGIN || 'http://localhost:8974').replace(/\/+$/, '')
 
   const providers = {}
   if (env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET) {

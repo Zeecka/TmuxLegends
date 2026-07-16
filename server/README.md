@@ -25,7 +25,7 @@ The Docker image uses `node:24-alpine`, so no flag juggling there.
 | --- | --- | --- |
 | `PORT` | `3001` | HTTP listen port. |
 | `DB_PATH` | `./tmuxpert.db` | SQLite file. Docker sets `/data/tmuxpert.db` (named volume). |
-| `PUBLIC_ORIGIN` | `http://localhost:8973` | Origin players use in the browser. Builds the OAuth redirect URIs; an `https` origin turns on `Secure` cookies. |
+| `PUBLIC_ORIGIN` | `http://localhost:8974` | Origin players use in the browser. Builds the OAuth redirect URIs; an `https` origin turns on `Secure` cookies. |
 | `SESSION_SECRET` | *(generated)* | HMAC key for session tokens. **Required in production** — if unset, a random one is generated at boot (with a warning) and all sessions die on restart. |
 | `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | — | Google OAuth app. Google sign-in appears only when **both** are set. |
 | `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET` | — | GitHub OAuth app. Same rule. |
@@ -35,7 +35,7 @@ See [`.env.example`](./.env.example) for a documented template.
 ## Creating the OAuth apps
 
 The redirect URIs below assume `PUBLIC_ORIGIN=https://tmuxpert.example.com`;
-substitute your own origin (for local docker use `http://localhost:8973`).
+substitute your own origin (for local docker use `http://localhost:8974`).
 
 ### Google
 
@@ -98,7 +98,7 @@ docker build -t tmuxpert-api ./server
 docker run -d --name tmuxpert-api \
   -v tmuxpert-data:/data \
   -e SESSION_SECRET=change-me \
-  -e PUBLIC_ORIGIN=http://localhost:8973 \
+  -e PUBLIC_ORIGIN=http://localhost:8974 \
   -p 3001:3001 tmuxpert-api
 ```
 

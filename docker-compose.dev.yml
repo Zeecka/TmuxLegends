@@ -6,8 +6,14 @@
 #
 # The Vite dev server (HMR) serves the app on http://localhost:8972 with the
 # repo bind-mounted, so editing any file under src/ reloads the browser
-# automatically - no rebuild, no restart. The optional accounts API runs
-# alongside it; Vite proxies /api to it (see VITE_API_TARGET in vite.config.ts).
+# automatically - no rebuild, no restart. The API runs with `node --watch`, so
+# server/ edits restart it too. Mirrors Vimersion's dev stack.
+#
+# Prod (docker-compose.yml, :8974) is a SEPARATE project, so the two stacks run
+# side by side. Without these explicit names both default to the directory name
+# and, sharing a service key `api`, each `up` would recreate the other's container.
+name: tmuxpert-dev
+
 services:
   web:
     image: node:22-alpine
@@ -19,33 +25,46 @@ services:
     ports:
       - "8972:8972"
     environment:
-      # inotify is unreliable over bind mounts - poll so HMR still fires.
-      VITE_USE_POLLING: "true"
       # The API is a sibling service here, not localhost.
       VITE_API_TARGET: http://api:3001
+      # inotify is unreliable over bind mounts - poll so HMR still fires.
+      VITE_USE_POLLING: "true"
     volumes:
       - .:/app
       - tmuxpert-node-modules:/app/node_modules
+    depends_on:
+      - api
     restart: unless-stopped
 
   # Optional: without OAuth credentials this serves no providers and the app
   # stays in offline mode. Stop it entirely and /api just 502s - also fine.
   api:
-    build: ./server
+    image: node:24-alpine
     container_name: tmuxpert-api-dev
-    restart: unless-stopped
+    working_dir: /app
+    # node --watch restarts the server on any change under server/.
+    command: node --experimental-sqlite --watch index.mjs
     volumes:
+      - ./server:/app
       - tmuxpert-dev-data:/data
     environment:
+      PORT: "3001"
+      DB_PATH: /data/tmuxpert.db
       PUBLIC_ORIGIN: ${PUBLIC_ORIGIN:-http://localhost:8972}
-      SESSION_SECRET: ${SESSION_SECRET:-}
+      SESSION_SECRET: ${SESSION_SECRET:-dev-secret-change-me}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
       GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-}
       GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET:-}
+    restart: unless-stopped
 
 volumes:
   # Keeps the container's node_modules off the host bind-mount (avoids glibc vs
   # musl native-binary clashes) and persists it between runs.
   tmuxpert-node-modules:
+  # Dev keeps its OWN accounts DB, deliberately not shared with prod. This
+  # container runs as root while the prod image runs as `node`; one volume
+  # between them means whichever creates it first sets the ownership, and the
+  # other then dies with "attempt to write a readonly database". Separate
+  # volumes remove the coupling - and a throwaway dev DB is what you want anyway.
   tmuxpert-dev-data:

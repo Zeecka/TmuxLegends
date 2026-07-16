@@ -22,7 +22,7 @@ before(async () => {
     loadConfig({
       DB_PATH: ':memory:',
       SESSION_SECRET: SECRET,
-      PUBLIC_ORIGIN: 'http://localhost:8973',
+      PUBLIC_ORIGIN: 'http://localhost:8974',
       GITHUB_CLIENT_ID: 'fake-id',
       GITHUB_CLIENT_SECRET: 'fake-secret',
       // google left unconfigured on purpose
@@ -101,7 +101,7 @@ test('auth start redirects to GitHub with a state cookie', async () => {
   const location = new URL(res.headers.get('location'))
   assert.equal(location.origin + location.pathname, 'https://github.com/login/oauth/authorize')
   assert.equal(location.searchParams.get('client_id'), 'fake-id')
-  assert.equal(location.searchParams.get('redirect_uri'), 'http://localhost:8973/api/auth/github/callback')
+  assert.equal(location.searchParams.get('redirect_uri'), 'http://localhost:8974/api/auth/github/callback')
   const state = location.searchParams.get('state')
   assert.match(state, /^[0-9a-f]{32}$/)
   const setCookie = res.headers.get('set-cookie')

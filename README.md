@@ -9,7 +9,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6?logo=typescript&logoColor=white)](tsconfig.json)
 [![React](https://img.shields.io/badge/React-18-61dafb?logo=react&logoColor=black)](package.json)
 [![Vite](https://img.shields.io/badge/Vite-8-646cff?logo=vite&logoColor=white)](vite.config.ts)
-[![Tests](https://img.shields.io/badge/tests-63%20passing-3ddc84)](tests)
+[![Tests](https://img.shields.io/badge/tests-74%20passing-3ddc84)](tests)
 [![Offline](https://img.shields.io/badge/works-100%25%20offline-ffc24b)](#-run-it)
 
 <img src="docs/media/home.png" width="85%" alt="Tmuxpert home: Nightglass UI, stats, and the Binding Belt">
@@ -68,7 +68,7 @@ machine-proven solvable** (see [Testing](#-testing-pars-are-proven-not-guessed))
 </tr>
 <tr>
 <td><img src="docs/media/arcade.png" alt="Prefix Rush: a 30-second prefix-then-key reflex drill"></td>
-<td><img src="docs/media/customize.png" alt="Customize: avatars, themes, and backgrounds bought with coins"></td>
+<td><img src="docs/media/customize.png" alt="Customize: style your Hero, plus themes and backgrounds bought with coins"></td>
 </tr>
 <tr>
 <td align="center"><em>Prefix Rush: drill the combos against the clock</em></td>
@@ -113,7 +113,7 @@ reachable the app reports offline and hides the account UI.
 
 ```bash
 docker compose -f docker-compose.dev.yml up   # HMR dev server on http://localhost:8972
-docker compose up -d                          # production stack on http://localhost:8973
+docker compose up -d                          # production stack on http://localhost:8974
 ```
 
 For dev, source is bind-mounted, so edits under `src/` hot-reload the browser with no rebuild.

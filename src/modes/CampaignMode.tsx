@@ -1,8 +1,9 @@
 import { useCallback, useRef, useState } from 'react'
 import TmuxSurface, { type TmuxSurfaceHandle } from '../tmux/TmuxSurface'
-import { ModeBadge } from '../ui/atoms'
+import { KeyedText, ModeBadge } from '../ui/atoms'
 import { Emoji } from '../ui/Emoji'
 import { ResultScreen } from '../ui/ResultScreen'
+import { CheatsheetButton } from '../ui/Cheatsheet'
 import { HeroPanel, type Reaction } from '../ui/HeroPanel'
 import { useGame, type CompleteOutcome } from '../game/store'
 import { challengesForTier, worldMeta } from '../content/tiers'
@@ -103,7 +104,9 @@ export function CampaignMode({ challenge, onPlay, onMap }: Props) {
               <p className="text-xs uppercase tracking-widest" style={{ color: world.accent }}>
                 World {challenge.tier} · {challenge.title}
               </p>
-              <h2 className="mt-1 text-lg text-ink">{activeStage.brief ?? challenge.brief}</h2>
+              <h2 className="mt-1 text-lg text-ink">
+                <KeyedText text={activeStage.brief ?? challenge.brief} />
+              </h2>
             </div>
             <div className="flex items-center gap-2">
               {stages.length > 1 && (
@@ -161,19 +164,13 @@ export function CampaignMode({ challenge, onPlay, onMap }: Props) {
             </div>
           </div>
 
-          <div className="mt-3 flex items-start justify-between gap-3">
-            <div className="min-w-0 flex-1">
-              {showHint ? (
-                <div className="flex items-start gap-2.5 rounded-xl border border-amber/30 bg-amber/10 px-3.5 py-2.5 text-sm text-ink">
-                  <span className="mt-0.5 shrink-0">
-                    <Emoji name="bulb" size={16} />
-                  </span>
-                  <span>
-                    <span className="mr-1.5 text-[11px] font-bold uppercase tracking-widest text-amber">Hint</span>
-                    {challenge.hint}
-                  </span>
-                </div>
-              ) : (
+          {/* In-play toolbar: hint on the left, quick controls on the right.
+              Every control preventDefaults mousedown so clicking it never pulls
+              key focus out of the tmux surface (Restart remounts + auto-focuses;
+              the cheatsheet hands focus back on close). */}
+          <div className="mt-3 space-y-3">
+            <div className="flex flex-wrap items-center gap-2">
+              {!showHint && (
                 <button
                   onMouseDown={(e) => e.preventDefault()}
                   onClick={revealHint}
@@ -183,17 +180,43 @@ export function CampaignMode({ challenge, onPlay, onMap }: Props) {
                   Need a hint?
                 </button>
               )}
+              <div className="ml-auto flex items-center gap-2">
+                <CheatsheetButton
+                  label="Commands"
+                  keepSurfaceFocus
+                  onClosed={() => surfaceRef.current?.focus()}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-border bg-panel-2/50 px-3.5 py-1.5 text-xs font-medium text-ink-dim transition-colors hover:border-magenta hover:text-magenta"
+                />
+                {/* Escape hatch: a wrong move (killed the wrong pane, etc.) can strand
+                    a level with no way to reach the goal - let the player reset in place. */}
+                <button
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={replay}
+                  title="Restart this level from the beginning"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-border bg-panel-2/50 px-3.5 py-1.5 text-xs font-medium text-ink-dim transition-colors hover:border-term hover:text-term"
+                >
+                  <span aria-hidden>↻</span> Restart
+                </button>
+                <button
+                  onClick={onMap}
+                  title="Leave this level and return to the world map"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-border bg-panel-2/50 px-3.5 py-1.5 text-xs font-medium text-ink-dim transition-colors hover:border-danger hover:text-danger"
+                >
+                  <span aria-hidden>⊞</span> Quit
+                </button>
+              </div>
             </div>
-            {/* Escape hatch: a wrong move (killed the wrong pane, etc.) can strand
-                a level with no way to reach the goal - let the player reset in place. */}
-            <button
-              onMouseDown={(e) => e.preventDefault()}
-              onClick={replay}
-              title="Restart this level from the beginning"
-              className="shrink-0 inline-flex items-center gap-1.5 rounded-full border border-border bg-panel-2/50 px-3.5 py-1.5 text-xs font-medium text-ink-dim transition-colors hover:border-term hover:text-term"
-            >
-              ↻ Restart
-            </button>
+            {showHint && (
+              <div className="flex items-start gap-2.5 rounded-xl border border-amber/30 bg-amber/10 px-3.5 py-2.5 text-sm text-ink">
+                <span className="mt-0.5 shrink-0">
+                  <Emoji name="bulb" size={16} />
+                </span>
+                <span>
+                  <span className="mr-1.5 text-[11px] font-bold uppercase tracking-widest text-amber">Hint</span>
+                  <KeyedText text={challenge.hint} />
+                </span>
+              </div>
+            )}
           </div>
         </div>
       </div>
