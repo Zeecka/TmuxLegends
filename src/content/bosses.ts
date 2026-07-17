@@ -38,7 +38,7 @@ export const bosses: Challenge[] = [
     ],
     par: 10,
     keystrokeBudget: 22,
-    hint: 'Prefix `%` (left|right), then prefix `"` to split the right pane. Prefix `o` back to the left, prefix `"` again - four panes. Finish with prefix `z`.',
+    hint: '`Ctrl-b` `%` (left|right), then `Ctrl-b` `"` to split the right pane. `Ctrl-b` `o` back to the left, `Ctrl-b` `"` again - four panes. Finish with `Ctrl-b` `z`.',
   },
   {
     // Tier-2 boss. (Boss ids are slugged by theme, not renumbered - b2-session-rescue
@@ -47,7 +47,7 @@ export const bosses: Challenge[] = [
     tier: 2,
     kind: 'boss',
     title: 'The Tab Wrangler',
-    brief: "A teammate left this session a mess. Tidy it up. First, rename this window (window 0, 'zsh') to 'editor' with prefix `,` .",
+    brief: "A teammate left this session a mess. Tidy it up. First, rename this window (window 0, 'zsh') to `editor` with `Ctrl-b` `,` .",
     taughtCommands: ['rename-window', 'select-window', 'kill-window', 'new-window'],
     start: withWindows(
       [{ name: 'zsh', cmd: 'zsh' }, { name: 'scratch' }, { name: 'server', cmd: 'node' }],
@@ -56,24 +56,24 @@ export const bosses: Challenge[] = [
     goal: { predicate: activeWindowNamed('editor'), describe: "Window 0 renamed to 'editor'" },
     stages: [
       {
-        brief: "The 'scratch' window (window 1) is junk. Jump to it (prefix `1`), then close it (prefix `&`).",
+        brief: "The 'scratch' window (window 1) is junk. Jump to it (`Ctrl-b` `1`), then close it (`Ctrl-b` `&`).",
         goal: { predicate: allOf(windowCount(2), not(windowNamed('scratch'))), describe: "The 'scratch' window is gone" },
       },
       {
-        brief: "Finally, add somewhere to tail logs: open a new window (prefix `c`) and name it 'logs' (prefix `,`).",
+        brief: "Finally, add somewhere to tail logs: open a new window (`Ctrl-b` `c`) and name it `logs` (`Ctrl-b` `,`).",
         goal: { predicate: allOf(windowNamed('logs'), windowCount(3)), describe: "A third window named 'logs' exists" },
       },
     ],
     par: 22,
     keystrokeBudget: 49,
-    hint: "Prefix `,` then editor, `Enter`. Then prefix `1` to jump to scratch and prefix `&` to close it. Then prefix `c` for a new window and prefix `,` to name it logs, `Enter`.",
+    hint: "`Ctrl-b` `,` then `editor`, `Enter`. Then `Ctrl-b` `1` to jump to scratch and `Ctrl-b` `&` to close it. Then `Ctrl-b` `c` for a new window and `Ctrl-b` `,` to name it `logs`, `Enter`.",
   },
   {
     id: 'b2-session-rescue',
     tier: 3,
     kind: 'boss',
     title: 'Session Rescue',
-    brief: "You've attached to a live incident. First, rename this session to 'rescue' (prefix `$`).",
+    brief: "You've attached to a live incident. First, rename this session to `rescue` (`Ctrl-b` `$`).",
     taughtCommands: ['rename-session', 'copy-mode', 'copy-search', 'copy-yank'],
     start: single({
       session: 'incident',
@@ -88,13 +88,13 @@ export const bosses: Challenge[] = [
     goal: { predicate: activeSessionNamed('rescue'), describe: "Session renamed to 'rescue'" },
     stages: [
       {
-        brief: 'Now grep the logs: enter copy mode, search for ERROR, and copy that line.',
+        brief: 'Now grep the logs: enter copy mode, search for `ERROR`, and copy that line.',
         goal: { predicate: clipboardContains('ERROR'), describe: 'The error line is in the copy buffer' },
       },
     ],
     par: 21,
     keystrokeBudget: 47,
-    hint: 'Prefix `$` then type rescue, `Enter`. Then prefix `[` to enter copy mode, `/` to search ERROR, `Enter`, then `Space` `$` `y` to copy the line.',
+    hint: '`Ctrl-b` `$` then type `rescue`, `Enter`. Then `Ctrl-b` `[` to enter copy mode, `/` to search `ERROR`, `Enter`, then `Space` `$` `y` to copy the line.',
   },
   {
     id: 'b3-rebuild',
@@ -107,24 +107,24 @@ export const bosses: Challenge[] = [
     goal: { predicate: allOf(paneCount(4), layoutIs('h[v[..]v[..]]')), describe: 'Four panes in a 2×2 grid' },
     stages: [
       {
-        brief: 'Grid built. Now cycle the layout so the panes stack (prefix `Space`).',
+        brief: 'Grid built. Now cycle the layout so the panes stack (`Ctrl-b` `Space`).',
         goal: { predicate: splitDirIs('v'), describe: 'Layout cycled to a stacked arrangement' },
       },
       {
-        brief: 'Finally, break the active pane out into its own window (prefix `!`).',
+        brief: 'Finally, break the active pane out into its own window (`Ctrl-b` `!`).',
         goal: { predicate: windowCount(2), describe: 'A pane broken out to its own window' },
       },
     ],
     par: 12,
     keystrokeBudget: 27,
-    hint: 'Prefix `%` , prefix `"` , prefix `o` , prefix `"` builds the grid. Then prefix `Space` cycles it, and prefix `!` breaks a pane out.',
+    hint: '`Ctrl-b` `%` , `Ctrl-b` `"` , `Ctrl-b` `o` , `Ctrl-b` `"` builds the grid. Then `Ctrl-b` `Space` cycles it, and `Ctrl-b` `!` breaks a pane out.',
   },
   {
     id: 'b4-pipeline',
     tier: 5,
     kind: 'boss',
     title: 'Deploy Pipeline',
-    brief: 'Do it all from the command line. First run  `neww -n build`  (prefix `:` then the command).',
+    brief: 'Do it all from the command line. First run  `neww -n build`  (`Ctrl-b` `:` then the command).',
     taughtCommands: ['command-prompt', 'new-window', 'split-h'],
     start: single({ session: 'ci', window: 'main', cmd: 'zsh' }),
     goal: { predicate: windowNamed('build'), describe: "A 'build' window created from the prompt" },
@@ -136,14 +136,14 @@ export const bosses: Challenge[] = [
     ],
     par: 28,
     keystrokeBudget: 62,
-    hint: 'Prefix `:` then `neww -n build` (`Enter`). Then prefix `:` again and `splitw -h` (`Enter`). Everything tmux does, the command line does.',
+    hint: '`Ctrl-b` `:` then `neww -n build` (`Enter`). Then `Ctrl-b` `:` again and `splitw -h` (`Enter`). Everything tmux does, the command line does.',
   },
   {
     id: 'b6-orchestrator',
     tier: 6,
     kind: 'boss',
     title: 'The Orchestrator',
-    brief: 'Script an entire workspace from the command line. First: prefix `:` then  `neww -n deploy`  (`Enter`).',
+    brief: 'Script an entire workspace from the command line. First: `Ctrl-b` `:` then  `neww -n deploy`  (`Enter`).',
     taughtCommands: ['command-prompt', 'new-window', 'split-h', 'resize-pane'],
     start: single({ session: 'ci', window: 'main', cmd: 'zsh' }),
     goal: { predicate: windowNamed('deploy'), describe: "A 'deploy' window created from the prompt" },
@@ -159,6 +159,6 @@ export const bosses: Challenge[] = [
     ],
     par: 42,
     keystrokeBudget: 93,
-    hint: 'Prefix `:` then `neww -n deploy` (`Enter`). Prefix `:` then `splitw -h` (`Enter`). Prefix `:` then `resizep -R` (`Enter`). The command line scripts everything.',
+    hint: '`Ctrl-b` `:` then `neww -n deploy` (`Enter`). `Ctrl-b` `:` then `splitw -h` (`Enter`). `Ctrl-b` `:` then `resizep -R` (`Enter`). The command line scripts everything.',
   },
 ]

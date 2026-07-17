@@ -1,0 +1,5 @@
+# Tmuxpert — a free, static web game. Everything is public and crawlable.
+User-agent: *
+Allow: /
+
+Sitemap: https://zeecka.github.io/Tmuxpert/sitemap.xml

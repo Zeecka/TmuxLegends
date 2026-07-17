@@ -56,8 +56,8 @@ export default function HowToPlay({ onClose }: { onClose: () => void }) {
       k: 'Every keystroke counts',
       body: (
         <>
-          Each level has a <b>goal</b> and a <b className="text-amber">par</b> — the fewest keystrokes a pro would use.
-          Solve it under par for <span className="text-amber">⭐⭐⭐</span>. It&rsquo;s golf: think, don&rsquo;t mash.
+          Each level has a <b>task</b> and a <b className="text-amber">goal</b> — the fewest keystrokes a pro would use.
+          Match or beat the goal for <span className="text-amber">⭐⭐⭐</span>. It&rsquo;s golf: think, don&rsquo;t mash.
         </>
       ),
     },
