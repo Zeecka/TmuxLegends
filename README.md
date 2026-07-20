@@ -9,7 +9,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6?logo=typescript&logoColor=white)](tsconfig.json)
 [![React](https://img.shields.io/badge/React-18-61dafb?logo=react&logoColor=black)](package.json)
 [![Vite](https://img.shields.io/badge/Vite-8-646cff?logo=vite&logoColor=white)](vite.config.ts)
-[![Tests](https://img.shields.io/badge/tests-74%20passing-3ddc84)](tests)
+[![Tests](https://img.shields.io/badge/tests-80%20passing-3ddc84)](tests)
 [![Offline](https://img.shields.io/badge/works-100%25%20offline-ffc24b)](#-run-it)
 
 <img src="docs/media/home.png" width="85%" alt="Tmuxpert home: Nightglass UI, stats, and the Binding Belt">
@@ -37,6 +37,7 @@ challenge is scored VimGolf-style against a **par**.
 | 🤖 **Muxie, your Hero** | one customizable companion - style its colors, visor, accessory and aura, then watch it idle, react while you type, and celebrate your wins |
 | ⌨️ **Binding Belt** | your growing, category-grouped collection of mastered bindings |
 | 🕹️ **Prefix Rush** | a 30-second reflex drill for prefix-then-key muscle memory |
+| 📱 **Quiz mode** | a touch-first, tap-to-answer trainer covering the whole curriculum — the mobile way to drill when the interactive surface isn't practical, no prefix key needed |
 | 📄 **Cheatsheet** | a searchable, in-app tmux reference you can **download as a PDF** - generated fully offline with zero dependencies |
 | 🎨 **Customize** | style your Hero for free, and spend coins on accent **themes** (the whole UI recolors live) and animated backgrounds |
 | 🌌 **3D world layer** | an optional cel-shaded WebGL stage behind the smoked-glass panels, auto-detected per device and lazy-loaded - weak devices get an equally complete 2D tier |
@@ -124,7 +125,7 @@ accounts service; bring it up without OAuth credentials and accounts simply stay
 ## 🧪 Testing: pars are proven, not guessed
 
 ```bash
-npm test           # 74 vitest tests
+npm test           # 80 vitest tests
 npm run typecheck  # tsc across the project
 npm run build      # production build
 ```
@@ -135,6 +136,7 @@ npm run build      # production build
 | `tests/par.test.ts` | **every challenge's par is achieved by a reference solution driven through the real engine**, including `:` commands, copy mode, and multi-stage bosses |
 | `tests/pdf.test.ts` | the offline cheatsheet PDF parses back cleanly - every cross-reference byte-offset lands on its object and each stream length is exact |
 | `tests/hero.test.ts` | the Hero resolves and normalizes · a v2 save's flat aura migrates · retired avatars are refunded to the coin, never silently dropped |
+| `tests/keys.test.ts` | the keyboard-event → key-name mapping the surface reads is exact — Ctrl/Alt/Shift and AltGraph resolve correctly |
 | `tests/driver.ts` | a headless key-runner that feeds keystrokes into the same `reduce()` the UI uses |
 
 The optional backend has its own suite: `cd server && npm test` (55 tests, zero npm deps).
@@ -162,14 +164,14 @@ src/
   three/     Stage3D.tsx (the WebGL underlay)  Hero3D.tsx  HeroExtras.tsx  AmbientScene.tsx
              backdrops.tsx (shader backdrops)  toon.ts  stageState.ts (UI <-> 3D bridge)
              sceneRegistry.ts (+ .meta.ts, the 3D-free mirror)
-  content/   tier1.ts to tier6.ts  bosses.ts  tiers.ts  build.ts
-  modes/     CampaignMode.tsx  ArcadeMode.tsx
+  content/   tier1.ts to tier6.ts  bosses.ts  tiers.ts  build.ts  quiz.ts (the Quiz question bank)
+  modes/     CampaignMode.tsx  ArcadeMode.tsx  QuizMode.tsx
   ui/        Hud, WorldMap, ResultScreen, BindingBelt, HeroPanel, Shop, atoms
              HeroMark/Avatar (the 2D Hero)  Background/Parallax (the lite tier)
              Cheatsheet + CheatsheetModal  HowToPlay  Account  Profile
 server/      optional accounts + verified-score API (zero npm deps) - see server/README.md
 tests/       driver.ts  par.test.ts (every par proven)  content.test.ts  pdf.test.ts
-             hero.test.ts (Hero + the v2->v3 avatar-refund migration)
+             hero.test.ts (Hero + the v2->v3 avatar-refund migration)  keys.test.ts (event->key mapping)
 ```
 
 ## ✍️ Adding a challenge
