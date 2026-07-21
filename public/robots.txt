@@ -2,4 +2,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://zeecka.github.io/TmuxLegends/sitemap.xml
+Sitemap: https://tmuxlegends.com/sitemap.xml
