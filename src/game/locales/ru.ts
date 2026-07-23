@@ -19,6 +19,8 @@ export const ru: Record<string, string> = {
   "home.resetConfirm": "Сбросить всё",
   "home.freeOss": "бесплатно и с открытым кодом",
   "home.donate": "поддержать",
+  "home.sisterApp": "попробуй {name}",
+  "home.sisterTitle": "Изучи ещё и Vim — попробуй наш родственный проект VimLegends",
   "stats.level": "УРОВЕНЬ",
   "stats.coins": "МОНЕТЫ",
   "stats.solved": "РЕШЕНО",

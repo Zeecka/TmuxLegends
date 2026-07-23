@@ -19,6 +19,8 @@ export const es: Record<string, string> = {
   "home.resetConfirm": "Reiniciar todo",
   "home.freeOss": "gratis y de código abierto",
   "home.donate": "donar",
+  "home.sisterApp": "prueba {name}",
+  "home.sisterTitle": "Aprende también Vim — prueba nuestro juego complementario VimLegends",
   "stats.level": "NIVEL",
   "stats.coins": "MONEDAS",
   "stats.solved": "RESUELTOS",

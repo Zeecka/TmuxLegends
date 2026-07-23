@@ -35,6 +35,8 @@ export const en: Record<string, string> = {
   'home.resetConfirm': 'Reset everything',
   'home.freeOss': 'free & open source',
   'home.donate': 'donate',
+  'home.sisterApp': 'try {name}',
+  'home.sisterTitle': 'Learn Vim too — try our companion game VimLegends',
   'stats.level': 'LEVEL',
   'stats.coins': 'COINS',
   'stats.solved': 'SOLVED',

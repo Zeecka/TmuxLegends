@@ -19,6 +19,8 @@ export const zh: Record<string, string> = {
   "home.resetConfirm": "重置全部",
   "home.freeOss": "免费开源",
   "home.donate": "捐赠",
+  "home.sisterApp": "试试 {name}",
+  "home.sisterTitle": "也来学 Vim —— 试试我们的姊妹游戏 VimLegends",
   "stats.level": "等级",
   "stats.coins": "金币",
   "stats.solved": "已通关",
