@@ -92,8 +92,10 @@ export function WorldMap({ onPlay }: { onPlay: (id: string) => void }) {
               ) : (
                 <p className="border-t border-border px-5 py-5 text-sm text-ink-dim">
                   {!hasContent
-                    ? `Curriculum stub — ${w.subtitle.toLowerCase()}. Landing in a future update.`
-                    : `Locked — clear World ${w.tier - 1} to unlock these ${chs.length} challenges.`}
+                    ? t('map.stub', {
+                        subtitle: t(`content.world.${w.tier}.subtitle`, undefined, w.subtitle),
+                      })
+                    : t('map.lockedHint', { prev: w.tier - 1, count: chs.length })}
                 </p>
               )}
             </section>

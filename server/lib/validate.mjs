@@ -115,7 +115,7 @@ function checkAura(v) {
   }
 }
 
-/** Hero customization (save v3): three color zones + accessory/visor + aura. */
+/** Hero customization (save v3): three color zones + accessory/visor/finish + aura + character. */
 function checkHero(v) {
   if (!isPlainObject(v)) fail('hero: expected an object')
   return {

@@ -267,7 +267,7 @@ export const useGame = create<GameStore>()(
       name: 'tmuxpert-save',
       version: 8,
       migrate: (persisted, version) => {
-        const p = (persisted ?? {}) as Record<string, any>
+        const p = (persisted ?? {}) as Record<string, unknown>
         const pe = (p.equipped ?? {}) as Record<string, unknown>
         const merged = {
           ...initial,
