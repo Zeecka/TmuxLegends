@@ -12,12 +12,12 @@
 # Prod (docker-compose.yml, :8974) is a SEPARATE project, so the two stacks run
 # side by side. Without these explicit names both default to the directory name
 # and, sharing a service key `api`, each `up` would recreate the other's container.
-name: tmuxpert-dev
+name: tmuxlegends-dev
 
 services:
   web:
     image: node:22-alpine
-    container_name: tmuxpert-dev
+    container_name: tmuxlegends-dev
     working_dir: /app
     # Install into the container-only node_modules volume (musl binaries for
     # vite/esbuild/tailwind), then start Vite bound to all interfaces.
@@ -36,7 +36,7 @@ services:
       VITE_PUBLIC_HOST: tmuxlegends.com
     volumes:
       - .:/app
-      - tmuxpert-node-modules:/app/node_modules
+      - tmuxlegends-node-modules:/app/node_modules
     depends_on:
       - api
     restart: unless-stopped
@@ -45,16 +45,16 @@ services:
   # stays in offline mode. Stop it entirely and /api just 502s - also fine.
   api:
     image: node:24-alpine
-    container_name: tmuxpert-api-dev
+    container_name: tmuxlegends-api-dev
     working_dir: /app
     # node --watch restarts the server on any change under server/.
     command: node --experimental-sqlite --watch index.mjs
     volumes:
       - ./server:/app
-      - tmuxpert-dev-data:/data
+      - tmuxlegends-dev-data:/data
     environment:
       PORT: "3001"
-      DB_PATH: /data/tmuxpert.db
+      DB_PATH: /data/tmuxlegends.db
       PUBLIC_ORIGIN: ${PUBLIC_ORIGIN:-http://localhost:8972}
       SESSION_SECRET: ${SESSION_SECRET:-dev-secret-change-me}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
@@ -66,10 +66,10 @@ services:
 volumes:
   # Keeps the container's node_modules off the host bind-mount (avoids glibc vs
   # musl native-binary clashes) and persists it between runs.
-  tmuxpert-node-modules:
+  tmuxlegends-node-modules:
   # Dev keeps its OWN accounts DB, deliberately not shared with prod. This
   # container runs as root while the prod image runs as `node`; one volume
   # between them means whichever creates it first sets the ownership, and the
   # other then dies with "attempt to write a readonly database". Separate
   # volumes remove the coupling - and a throwaway dev DB is what you want anyway.
-  tmuxpert-dev-data:
+  tmuxlegends-dev-data:
