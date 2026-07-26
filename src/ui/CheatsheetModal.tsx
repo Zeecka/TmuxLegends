@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { motion } from 'framer-motion'
-import { CHEAT_ROW_COUNT, PREFIX_LABEL, filterCheatsheet, type CheatRow } from '../game/cheatsheet'
+import { CHEAT_ROW_COUNT, PREFIX_LABEL, filterCheatsheet, downloadCheatsheet, type CheatRow } from '../game/cheatsheet'
 import { downloadCheatsheetPdf } from '../game/pdf'
 import { Emoji } from './Emoji'
 import { sfx } from '../game/sound'
@@ -138,9 +138,29 @@ export default function CheatsheetModal({ onClose }: { onClose: () => void }) {
           </div>
         )}
 
-        {/* Download action */}
+        {/* Download actions — Markdown, HTML, PDF (mirrors VimLegends). */}
         <div className="flex flex-wrap items-center gap-2.5 border-t border-border px-5 py-3.5">
           <span className="mr-auto text-xs text-ink-dim">{t('cheatsheet.takeItWithYou')}</span>
+          <button
+            onClick={() => {
+              sfx.ui()
+              downloadCheatsheet('md')
+              toast(t('cheatsheet.downloadedMd'))
+            }}
+            className="rounded-lg border border-border px-3.5 py-1.5 text-sm text-ink transition-colors hover:border-term hover:text-term"
+          >
+            ↓ {t('cheatsheet.markdown')}
+          </button>
+          <button
+            onClick={() => {
+              sfx.ui()
+              downloadCheatsheet('html')
+              toast(t('cheatsheet.downloadedHtml'))
+            }}
+            className="rounded-lg border border-border px-3.5 py-1.5 text-sm text-ink transition-colors hover:border-cyan hover:text-cyan"
+          >
+            ↓ {t('cheatsheet.html')}
+          </button>
           <button
             onClick={() => {
               sfx.ui()

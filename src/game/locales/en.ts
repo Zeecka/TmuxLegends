@@ -86,7 +86,9 @@ export const en: Record<string, string> = {
   'campaign.quit': 'Quit',
   'campaign.quitTitle': 'Leave this level and return to the world map',
   'campaign.hintLabel': 'Hint',
-  'campaign.bossIntegrity': 'Boss integrity',
+  'campaign.needsKeyboard': 'This level needs a physical keyboard — it plays best on a computer.',
+  'campaign.tryQuiz': 'Try the Quiz →',
+  'campaign.bossIntegrity': 'Keystroke budget',
   'campaign.keystrokesLeft': '{n} keystrokes left',
   'campaign.repelled': 'REPELLED!',
   'campaign.repelledBody':
@@ -194,7 +196,7 @@ export const en: Record<string, string> = {
     "A pane is a split of the screen, a window is a tab holding panes, and a session holds windows. Detach a session with `C-b` `d` and everything keeps running — that's tmux's superpower.",
   'howto.step3.title': 'Every keystroke counts',
   'howto.step3.body':
-    "Each level has a task and a goal — the fewest keystrokes a pro would use. Match or beat the goal for ⭐⭐⭐. It's golf: think, don't mash.",
+    "Each level has a task and a goal — the fewest keystrokes a pro would use. Match or beat the goal for ★★★. It's golf: think, don't mash.",
   'howto.step4.title': 'Never stuck',
   'howto.step4.body':
     'Below the surface: "Need a hint?" spells out the move, "Cheatsheet" lists every binding, and "Restart" resets the level if you tangle it up. You can\'t break anything.',
@@ -214,8 +216,12 @@ export const en: Record<string, string> = {
   'cheatsheet.mastered': 'playable in TmuxLegends',
   'cheatsheet.noMatch': 'Nothing matches “{q}”.',
   'cheatsheet.takeItWithYou': 'Take it with you:',
+  'cheatsheet.markdown': 'Markdown',
+  'cheatsheet.html': 'HTML',
   'cheatsheet.downloadPdf': 'Download PDF',
   'cheatsheet.downloadPdfTitle': 'Download the full cheatsheet as a PDF',
+  'cheatsheet.downloadedMd': 'Downloaded Markdown ✓',
+  'cheatsheet.downloadedHtml': 'Downloaded HTML ✓',
   'cheatsheet.downloadedPdf': 'Downloaded PDF ✓',
 
   // ── Account ─────────────────────────────────────────────────────────
