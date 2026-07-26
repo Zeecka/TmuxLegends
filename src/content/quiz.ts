@@ -211,6 +211,19 @@ export const QUIZ: QuizQuestion[] = [
     answer: 0,
     explain: 'It re-tiles the panes using tmux\'s built-in layouts.',
   },
+  {
+    id: 'q4-break-result',
+    tier: 4,
+    prompt: 'After you break a pane out with C-b !, what do you end up with?',
+    choices: [
+      'The pane becomes its own new window, and focus follows it',
+      'The pane is closed and its contents are lost',
+      'The pane is duplicated into two side-by-side copies',
+      'Every pane merges back into one',
+    ],
+    answer: 0,
+    explain: 'break-pane promotes the active pane to a standalone window and switches you to it.',
+  },
 
   // ── World 5 · Command Line ───────────────────────────────────────────
   {

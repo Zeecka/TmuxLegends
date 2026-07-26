@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { CHALLENGES, WORLDS, standardForTier, tierUnlocked } from '../src/content/tiers'
-import { BINDING_BY_ID } from '../src/tmux/catalog'
+import { BINDINGS, BINDING_BY_ID } from '../src/tmux/catalog'
 import { checkGoal } from '../src/game/runtime'
 import { stagesOf } from '../src/game/types'
 import { activeSession, activeWindow } from '../src/tmux/model'
@@ -25,11 +25,19 @@ describe('content integrity', () => {
     }
   })
 
-  it('bosses have stages and a budget', () => {
+  it('bosses have stages and a budget past the 1★ threshold', () => {
     for (const ch of CHALLENGES.filter((c) => c.kind === 'boss')) {
       expect(ch.stages?.length, `${ch.id} boss has no stages`).toBeGreaterThan(0)
       expect(ch.keystrokeBudget, `${ch.id} boss has no budget`).toBeDefined()
+      expect(ch.keystrokeBudget!, `${ch.id}: budget must exceed 1★ threshold`).toBeGreaterThan(
+        Math.ceil(ch.par * 1.75),
+      )
     }
+  })
+
+  it('binding ids are unique', () => {
+    const ids = BINDINGS.map((b) => b.id)
+    expect(new Set(ids).size).toBe(ids.length)
   })
 
   it('every start state is structurally valid', () => {

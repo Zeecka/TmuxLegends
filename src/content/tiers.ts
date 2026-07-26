@@ -62,15 +62,3 @@ export function tierUnlocked(tier: Tier, completed: Record<string, ChallengeResu
   const prev = (tier - 1) as Tier
   return standardForTier(prev).every((c) => completed[c.id])
 }
-
-export const FIRST_CHALLENGE_ID = CHALLENGES[0].id
-
-/** The next unsolved challenge in play order, or the last one if all done. */
-export function nextChallengeId(completed: Record<string, ChallengeResult>): string {
-  const next = CHALLENGES.find((c) => !completed[c.id])
-  return (next ?? CHALLENGES[CHALLENGES.length - 1]).id
-}
-
-export function indexOfChallenge(id: string): number {
-  return CHALLENGES.findIndex((c) => c.id === id)
-}
