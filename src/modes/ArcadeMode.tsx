@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { KeyCap, KeyedText } from '../ui/atoms'
-import { Emoji } from '../ui/Emoji'
+import { PlayerAvatar } from '../ui/Avatar'
 import { MODIFIER_KEYS, isPrefix, keyFromEvent } from '../tmux/engine'
 import { sfx } from '../game/sound'
 import { useGame } from '../game/store'
@@ -72,6 +72,7 @@ export function ArcadeMode() {
     setResult(null)
     pickDrill()
     setPhase('playing')
+    sfx.ui()
   }
 
   // Countdown.
@@ -95,6 +96,7 @@ export function ArcadeMode() {
       const r = record(score, [...hitIds.current])
       setResult({ ...r, score })
       setPhase('over')
+      sfx.success()
     }
   }, [phase, timeLeft, score, record])
 
@@ -155,7 +157,7 @@ export function ArcadeMode() {
   return (
     <div className="mx-auto max-w-2xl px-4 py-10">
       <div className="text-center">
-        <h2 className="title-gradient font-terminal text-4xl font-bold">{t('arcade.title')}</h2>
+        <h2 className="screen-title font-terminal text-4xl font-bold">{t('arcade.title')}</h2>
         <p className="mt-2 text-sm text-ink-dim">
           <KeyedText text={t('arcade.tagline', { sec: DURATION })} />
         </p>
@@ -163,7 +165,8 @@ export function ArcadeMode() {
 
       {phase === 'ready' && (
         <div className="panel mt-8 flex flex-col items-center gap-4 p-8 text-center">
-          <Emoji name="bolt" size={48} />
+          {/* Show off the player's chosen character (parity with Vim's arcade cursor). */}
+          <PlayerAvatar size={72} />
           <p className="text-ink-dim">
             {t('arcade.best')}: <span className="font-terminal text-xl text-term">{best}</span>
           </p>

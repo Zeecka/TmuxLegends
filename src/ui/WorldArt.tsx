@@ -19,7 +19,7 @@ const CY = H / 2
 
 const TAU = Math.PI * 2
 
-/** World 1 · Survive — concentric hexagon rings: calm, orderly, foundational. */
+/** World 1 · Split — concentric hexagon rings: calm, orderly, foundational. */
 function HexRings({ c }: { c: string }) {
   const hex = (r: number) =>
     Array.from({ length: 6 }, (_, k) => {
@@ -35,7 +35,7 @@ function HexRings({ c }: { c: string }) {
   )
 }
 
-/** World 2 · Comfortable — layered sine waves: flowing, word-by-word motion. */
+/** World 2 · Windows — layered sine waves: flowing, tab-by-tab motion. */
 function Waves({ c }: { c: string }) {
   const wave = (phase: number, amp: number, y: number) => {
     const pts = Array.from({ length: 49 }, (_, i) => {
@@ -53,7 +53,7 @@ function Waves({ c }: { c: string }) {
   )
 }
 
-/** World 3 · Faster — low-poly triangular shards: sharp, quick, kinetic. */
+/** World 3 · Sessions & Copy — low-poly triangular shards: sharp, quick, kinetic. */
 function Shards({ c }: { c: string }) {
   // A deterministic pseudo-scatter via trig — no Math.random, stable per render.
   const pt = (i: number, k: number) => {
@@ -70,7 +70,7 @@ function Shards({ c }: { c: string }) {
   )
 }
 
-/** World 4 · Seeker — a search grid with a scanning crosshair of circles. */
+/** World 4 · Rearrange — a search grid with a scanning crosshair of circles. */
 function SearchGrid({ c }: { c: string }) {
   const cols = 12
   const rows = 8
@@ -95,7 +95,7 @@ function SearchGrid({ c }: { c: string }) {
   )
 }
 
-/** World 5 · Superpowers — orbital particle rings: energy, registers, macros. */
+/** World 5 · Command Line — orbital particle rings: energy, the : prompt, scripting. */
 function Orbits({ c }: { c: string }) {
   const rings = [110, 180, 250, 330, 410]
   return (
@@ -124,7 +124,7 @@ function Orbits({ c }: { c: string }) {
   )
 }
 
-/** World 6 · Legend — a radial mandala / kaleidoscope: mastery, symmetry. */
+/** World 6 · Power User — a radial mandala / kaleidoscope: mastery, symmetry. */
 function Mandala({ c }: { c: string }) {
   const spokes = 24
   return (

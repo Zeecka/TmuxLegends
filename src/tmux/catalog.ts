@@ -41,7 +41,7 @@ export const BINDINGS: Binding[] = [
   { id: 'copy-mode', keys: 'C-b [', label: 'Enter copy mode', category: 'Copy mode', tier: 3 },
   { id: 'copy-search', keys: '/', label: 'Search scrollback', category: 'Copy mode', tier: 3 },
   { id: 'copy-yank', keys: 'Space ... Enter', label: 'Select & copy', category: 'Copy mode', tier: 3 },
-  { id: 'paste', keys: 'C-b ]', label: 'Paste buffer', category: 'Copy mode', tier: 3 },
+  { id: 'paste', keys: 'C-b ]', label: 'Paste buffer', category: 'Copy mode', tier: 6 },
 
   // Tier 4 - Layout / rearrange
   { id: 'next-layout', keys: 'C-b Space', label: 'Cycle layouts', category: 'Layout', tier: 4 },

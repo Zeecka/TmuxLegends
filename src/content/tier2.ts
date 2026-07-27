@@ -42,6 +42,20 @@ export const tier2: Challenge[] = [
     hint: '`Ctrl-b` then `n` = next, `Ctrl-b` then `p` = previous. They wrap around.',
   },
   {
+    id: 't2-prev-window',
+    tier: 2,
+    title: 'Back a Window',
+    brief: 'You overshot to window 2 (logs). Step back to the previous window with `Ctrl-b` then `p`.',
+    taughtCommands: ['prev-window'],
+    start: withWindows(
+      [{ name: 'editor', cmd: 'vim' }, { name: 'server' }, { name: 'logs' }],
+      { activeIndex: 2 },
+    ),
+    goal: { predicate: activeWindowIndex(1), describe: 'Window 1 (server) is active' },
+    par: 2,
+    hint: '`Ctrl-b` then `p` = previous window — the mirror of `n` for next. Both wrap around the list.',
+  },
+  {
     id: 't2-jump',
     tier: 2,
     title: 'Jump by Number',

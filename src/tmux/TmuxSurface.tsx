@@ -232,7 +232,7 @@ function PaneBody({
   return (
     <div className="text-ink/80">
       <span className="text-term">~</span> $ {pane.cmd ? <span className="text-ink-dim">{pane.cmd}</span> : null}
-      {active && mode === 'normal' && <span className="ml-0.5 inline-block h-[1em] w-[0.5em] translate-y-[0.15em] bg-term align-middle tx-anim" style={{ animation: 'tx-blink 1s step-end infinite' }} />}
+      {active && mode === 'normal' && <span className="ml-0.5 inline-block h-[1em] w-[0.5em] translate-y-[0.15em] bg-term align-middle" style={{ animation: 'tx-blink 1s step-end infinite' }} />}
     </div>
   )
 }

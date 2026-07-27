@@ -23,6 +23,7 @@ const SOLUTIONS: Record<string, string> = {
   't2-new-window': 'C-bc',
   't2-rename': 'C-b,editor<CR>',
   't2-switch': 'C-bn',
+  't2-prev-window': 'C-bp',
   't2-jump': 'C-b2',
   't2-kill-window': 'C-b&',
   't2-capstone': 'C-bcC-b,logs<CR>',
